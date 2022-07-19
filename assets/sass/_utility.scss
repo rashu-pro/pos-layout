@@ -22,8 +22,11 @@
 1. SECTION STYLE
  ---------------*/
 .section-title{
-  font-size: 20px;
+  font-size: 18px;
   font-weight: $font-bold;
+  @media (min-width:768px){
+    font-size: 20px;
+  }
 }
 
 .text-two-line{
@@ -109,7 +112,7 @@ $border-qty: #C1BCBC;
 4. ROW COLUMN CUSTOM GAP
  ------------------------*/
 $less-gutter-amount: 7.5px;
-$less-gutter-amount-small: 5px;
+$less-gutter-amount-small: 7.5px;
 .row{
   &.less-gutter{
     margin-left:-$less-gutter-amount-small;

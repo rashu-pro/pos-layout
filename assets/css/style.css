@@ -49,8 +49,13 @@ body {
 1. SECTION STYLE
  ---------------*/
 .section-title {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700;
+}
+@media (min-width: 768px) {
+  .section-title {
+    font-size: 20px;
+  }
 }
 
 .text-two-line {
@@ -127,12 +132,12 @@ body {
 4. ROW COLUMN CUSTOM GAP
  ------------------------*/
 .row.less-gutter {
-  margin-left: -5px;
-  margin-right: -5px;
+  margin-left: -7.5px;
+  margin-right: -7.5px;
 }
 .row.less-gutter [class*=col-] {
-  padding-left: 5px;
-  padding-right: 5px;
+  padding-left: 7.5px;
+  padding-right: 7.5px;
 }
 @media (min-width: 768px) {
   .row.less-gutter {
@@ -217,6 +222,15 @@ body {
 .btn-blank {
   padding: 0;
   min-width: 0;
+}
+
+.header {
+  display: none;
+}
+@media (min-width: 992px) {
+  .header {
+    display: block;
+  }
 }
 
 .navbar .navbar-brand img {
@@ -374,10 +388,12 @@ body {
   position: sticky;
   top: 0;
   z-index: 999;
-  background: #f4fafc;
+  background: #fff;
 }
 .main-body-head-title {
-  margin-bottom: 20px;
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-bottom: 8px;
 }
 @media (min-width: 992px) {
   .main-body-head-title {
@@ -387,12 +403,17 @@ body {
 .main-body-head .section-title {
   margin-bottom: 0;
 }
+@media (min-width: 992px) {
+  .main-body-head {
+    background: #f4fafc;
+  }
+}
 .main-body.with-product-quantity .product-single .product-quantity {
   display: none;
 }
 
 .product-single {
-  border: 1px solid #ddd;
+  border: 2px solid #ddd;
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 2px 6px #cee9fe;
@@ -441,6 +462,7 @@ body {
 }
 .product-single.style-3 .product-title {
   font-size: 14px;
+  margin-bottom: 10px;
 }
 @media (min-width: 768px) {
   .product-single.style-3 .product-title {
@@ -456,7 +478,7 @@ body {
   }
 }
 .product-single.style-3.active {
-  outline: 2px solid #018d5b;
+  border-color: #018d5b;
 }
 .product-single.style-3.active .active-icon {
   display: block;
@@ -496,7 +518,7 @@ body {
 }
 .product-content-body {
   padding: 10px 10px 16px;
-  min-height: 102px;
+  min-height: 105px;
 }
 .product-content-foot {
   padding: 10px;
@@ -664,6 +686,10 @@ body {
   box-shadow: inset 0 0 4px rgba(255, 255, 255, 0.48);
 }
 
+.img-logo {
+  max-width: 150px;
+}
+
 @media (min-width: 1200px) {
   .container-xl, .container-lg, .container-md, .container-sm, .container {
     max-width: 1270px;
@@ -673,6 +699,10 @@ body {
   padding: 25px 0;
   background-color: #1f272c;
   color: #fff;
+}
+
+.footer-logo {
+  padding: 15px;
 }
 
 /*# sourceMappingURL=style.css.map */
