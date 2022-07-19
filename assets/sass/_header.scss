@@ -1,0 +1,17 @@
+.navbar{
+  .navbar-brand{
+    img{
+      max-height:65px;
+    }
+  }
+}
+.header{
+  border-bottom:1px solid #ddd;
+}
+
+.collapse{
+  display: none;
+  @media (min-width:992px){
+    display: flex;
+  }
+}

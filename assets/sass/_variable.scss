@@ -1,0 +1,33 @@
+//color
+$bg-grey: #C0C0C0;
+$bg-footer-grey: $bg-grey;
+$bg-btn: #03a9f4;
+
+$color-body: #202020;
+$color-title: #03a9f4;
+
+$color-blue-light: #e1ecf5;
+$color-success: #018d5b;
+
+//FONT SIZES
+$font-body: 16px;
+$font-title-small: 16px;
+$font-title-medium: 22px;
+$font-title-big: 26px;
+
+@media (min-width:768px) {
+  $font-body: 16px;
+  $font-title-small: 18px;
+  $font-title-medium: 22px;
+  $font-title-big: 26px;
+}
+
+//BORDER RADIUS
+$radius-btn: 4px;
+
+//PADDING
+$padding-btn: 10px 30px;
+
+//RESPONSIVE BREAKPOINT
+$responsive-breakpoint: 1200px;
+
