@@ -1,0 +1,11 @@
+.bounce {
+  animation: bounce 1s ease 1;
+}
+
+@keyframes bounce {
+  0% { transform:translateY(0%); }
+  20% { transform:translateY(-15%); }
+  40% { transform:translateY(0%); }
+  97% { transform:translateY(-3%); }
+  100% { transform:translateY(0%); }
+}

@@ -1,5 +1,5 @@
 .main-body{
-  min-height:90vh;
+  min-height:95vh;
   //background-color: #f8f8f8;
   background-color: #f4fafc;
 
@@ -22,9 +22,9 @@
     &-title{
       text-transform: uppercase;
       font-weight: $font-semibold;
-      margin-bottom:8px;
+      margin-bottom:0px;
       @media (min-width:992px){
-        margin-bottom:0;
+        margin-bottom:8px;
       }
     }
 
@@ -47,6 +47,10 @@
         }
       }
     }
+  }
+
+  @media (min-width:992px){
+    min-height:90vh;
   }
 }
 
@@ -240,7 +244,7 @@
 
 .container{
   &-main{
-    border:1px solid #ddd;
+    //border:1px solid #ddd;
     border-top:0;
     &.style-3{
       .cart-item{
@@ -270,6 +274,10 @@
           }
         }
       }
+    }
+
+    @media (min-width:576px){
+      border:1px solid #ddd;
     }
   }
 }
