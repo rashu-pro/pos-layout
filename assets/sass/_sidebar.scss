@@ -10,6 +10,11 @@
   right:0;
   transform:translateX(100%);
 
+  &-body{
+    max-height:calc(100% - 130px);
+    overflow: auto;
+  }
+
   &-inner{
     margin-left: -15px;
     margin-right: -15px;

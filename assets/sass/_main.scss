@@ -253,15 +253,17 @@
           }
         }
         &-content{
-          padding-left:8px;
-          width: calc(100% - 55px);
+          padding-left:0;
+          width: 100%;
           .section-title{
             font-size: 15px;
             font-weight: 500;
-            margin-bottom:4px;
+            margin-bottom:8px;
           }
           &-foot{
+            justify-content: flex-start;
             .price{
+              padding-left:25px;
               font-size:15px;
               font-weight:500;
             }
@@ -307,6 +309,11 @@
       td,th{
         min-width:90px;
       }
+    }
+
+    .tr-serial{
+      min-width: 0;
+      width:30px;
     }
   }
 }

@@ -45,6 +45,10 @@ body {
   padding-bottom: 15px;
 }
 
+.pl-10 {
+  padding-left: 10px;
+}
+
 /*
 1. SECTION STYLE
  ---------------*/
@@ -261,6 +265,10 @@ body {
   right: 0;
   transform: translateX(100%);
 }
+.sidebar-body {
+  max-height: calc(100% - 130px);
+  overflow: auto;
+}
 .sidebar-inner {
   margin-left: -15px;
   margin-right: -15px;
@@ -368,6 +376,22 @@ body {
   font-size: 16px;
   border-radius: 6px;
   margin-left: 4px;
+}
+
+.empty-cart-notice {
+  text-align: center;
+  padding: 80px 20px 50px;
+}
+.empty-cart-notice-wrapper {
+  display: none;
+}
+.empty-cart-notice-wrapper.active {
+  display: block;
+}
+.empty-cart-notice-title {
+  font-size: 24px;
+  padding-top: 16px;
+  font-weight: 600;
 }
 
 .main-body {
@@ -580,15 +604,19 @@ body {
   border: 2px solid #ddd;
 }
 .container-main.style-3 .cart-item-content {
-  padding-left: 8px;
-  width: calc(100% - 55px);
+  padding-left: 0;
+  width: 100%;
 }
 .container-main.style-3 .cart-item-content .section-title {
   font-size: 15px;
   font-weight: 500;
-  margin-bottom: 4px;
+  margin-bottom: 8px;
+}
+.container-main.style-3 .cart-item-content-foot {
+  justify-content: flex-start;
 }
 .container-main.style-3 .cart-item-content-foot .price {
+  padding-left: 25px;
   font-size: 15px;
   font-weight: 500;
 }
@@ -610,6 +638,10 @@ body {
 }
 .ticket-summary-table .table tr td, .ticket-summary-table .table tr th {
   min-width: 90px;
+}
+.ticket-summary-table .table .tr-serial {
+  min-width: 0;
+  width: 30px;
 }
 
 .table-responsive {
