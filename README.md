@@ -2,4 +2,9 @@
 POS layout to sell event tickets
 
 
-![image](https://user-images.githubusercontent.com/100119758/180222766-6bc4243f-8cbd-426f-bd88-2a18f582a0a3.png)
+# Mobile Version
+![image](https://user-images.githubusercontent.com/100119758/180223038-f6dee9ae-5167-4bc6-8414-2717087f7522.png)
+ 
+# Desktop Version
+![image](https://user-images.githubusercontent.com/100119758/180223237-d958cfe4-ee6f-4f50-aa37-1643fbe8bfd9.png)
+
