@@ -4,8 +4,46 @@
 
 const bodyOverlay = document.querySelector('.body-overlay-js');
 const cartSidebar = document.querySelector('.sidebar-js');
+const itemList = [
+    {name:'Adult', price:'89', key:'60BABEEA-9EFE-43CD-9FFF-B2B9C8B9043E', ticketCategory:'convention'},
+    {name:'Couple', price:'169', key:'60BABEEA-9EFE-43CD-9FFF-B2B9C8B9043E', ticketCategory:'convention'},
+    {name:'Group of 4 Adult or more', price:'320', key:'60BABEEA-9EFE-43CD-9FFF-B2B9C8B9043E', ticketCategory:'convention'},
+    {name:'College Student (18+)', price:'79', key:'60BABEEA-9EFE-43CD-9FFF-B2B9C8B9043E', ticketCategory:'convention'},
+    {name:'Youth/Myna (12-18)', price:'59', key:'60BABEEA-9EFE-43CD-9FFF-B2B9C8B9043E', ticketCategory:'convention'},
+    {name:'Senior Citized (65+)', price:'79', key:'60BABEEA-9EFE-43CD-9FFF-B2B9C8B9043E', ticketCategory:'convention'},
+    {name:'Saturday', price:'100', key:'60BABEEA-9EFE-43CD-9FFF-B2B9C8B9043E', ticketCategory:'matrimonial'},
+    {name:'Sunday', price:'100', key:'60BABEEA-9EFE-43CD-9FFF-B2B9C8B9043E', ticketCategory:'matrimonial'},
+    {name:'Both Days', price:'175', key:'60BABEEA-9EFE-43CD-9FFF-B2B9C8B9043E', ticketCategory:'matrimonial'},
+    {name:'Saturday With One Parent/Wali', price:'200', key:'60BABEEA-9EFE-43CD-9FFF-B2B9C8B9043E', ticketCategory:'matrimonial'},
+    {name:'Sunday With One Parent/Wali', price:'200', key:'60BABEEA-9EFE-43CD-9FFF-B2B9C8B9043E', ticketCategory:'matrimonial'},
+    {name:'Both With One Parent/Wali', price:'350', key:'60BABEEA-9EFE-43CD-9FFF-B2B9C8B9043E', ticketCategory:'matrimonial'},
+    {name:'Chaplaincy Training (Includes Lunch)', price:'79', key:'60BABEEA-9EFE-43CD-9FFF-B2B9C8B9043E', ticketCategory:'chaplaincy'}
+];
+const couponCodes = [
+    {name:'coupon', discount:'20', calculateMethod:'percentage'},
+    {name:'discount', discount:'30', calculateMethod:'percentage'},
+    {name:'voucher', discount:'50', calculateMethod:'solid'}
+];
 
 let itemHolder = $('.cart-item-list');
+
+//=== PRODUCTS LOAD ON DOCUMENT READY
+let ticketCategorySelector = $('.ticket-category-js'),
+    selectedOption = ticketCategorySelector.children(':selected'),
+    itemCategory = selectedOption.attr('data-category');
+$('.ticket-category-title-js').html(selectedOption.text());
+loadProducts(itemCategory);
+isProductSelected();
+
+//=== ON TICKET CATEGORY CHANGE
+$(document).on('change', '.ticket-category-js', function () {
+    let self = $(this),
+        selectedOption = self.children(':selected'),
+        itemCategory = selectedOption.data('category');
+    $('.ticket-category-title-js').html(selectedOption.text());
+    loadProducts(itemCategory);
+    isProductSelected();
+});
 
 //=== CLICK ACTIONS
 $(document).on('click', '.cart-toggler-js', function () {
@@ -101,6 +139,7 @@ $(document).on('click', '.btn-search-toggler', function (e) {
     $('.search-wrapper-dropdown-js').toggleClass('active');
 });
 
+//=== CUSTOM PRODUCT ADD CLICK ACTION
 $(document).on('click', '.btn-custom-product-add-js', function (e) {
     e.preventDefault();
     let self = $(this),
@@ -135,17 +174,18 @@ $(document).on('click', '.btn-custom-product-add-js', function (e) {
     $('.loader-div').addClass('active');
     itemName = self.closest('.product-custom').find('.product-custom-name-js').val();
 
-    addCustomItemToCart(self, dataId, itemName, itemQuantity, itemPrice, itemTotalPrice);
+    addCustomItemToCart(self, dataId, false, itemName, itemQuantity, itemPrice, itemTotalPrice);
     calculateTotal();
     calculateGrandTotal();
     $('.loader-div').removeClass('active');
 });
 
+//=== DONATION BUTTON CLICK ACTION
 $(document).on('click', '.btn-donate-js', function (e) {
     e.preventDefault();
     let self = $(this),
         parent = self.closest('.product-custom'),
-        dataId = 'data-id-'+Math.floor(Math.random()*90000) + 10000,
+        dataId = 'data-id-donation',
         itemName = parent.data('name'),
         itemQuantity = false,
         itemPrice = false,
@@ -157,10 +197,24 @@ $(document).on('click', '.btn-donate-js', function (e) {
         return;
     }
     $('.loader-div').addClass('active');
-    addCustomItemToCart(self, dataId, itemName, itemQuantity, itemPrice, itemTotalPrice);
-    calculateTotal();
+    // addCustomItemToCart(self, dataId, false, itemName, itemQuantity, itemPrice, itemTotalPrice);
+    // calculateTotal();
+    $('.donation-tr').show();
+    $('.donation-tr .item-name').html(itemName);
+    $('.donation-tr .amount').html(itemTotalPrice);
+    $('.donation-amount-name-js').val(itemTotalPrice);
     calculateGrandTotal();
     $('.loader-div').removeClass('active');
+});
+
+//=== DONATION REMOVE BUTTON CLICK ACTION
+$(document).on('click', '.donation-remove-js', function (e) {
+    let self = $(this);
+    self.closest('.donation-tr').find('.amount').html(0);
+    self.closest('.donation-tr').hide();
+    $('.donation-amount-js').val(0);
+    $('.donation-amount-name-js').val(0);
+    calculateGrandTotal();
 });
 
 //=== COUPON APPLY BUTTON CLICK
@@ -170,22 +224,22 @@ $(document).on('click', '.btn-apply-voucher-js', function (e) {
         voucherField = $('.voucher-field-js'),
         subtotal = parseFloat($('.subtotal-js').text()),
         discountAmount = 0,
-        discountSign = '',
-        couponCodes = [
-            {name:'coupon', discount:'20', calculateMethod:'percentage'},
-            {name:'discount', discount:'30', calculateMethod:'percentage'},
-            {name:'voucher', discount:'50', calculateMethod:'solid'}
-            ];
+        discountSign = '';
+    if(subtotal<1){
+        self.closest('.voucher-block').find('.warning-message').remove();
+        self.closest('.voucher-block').prepend('<p class="text-danger warning-message">Add an item first!</p>');
+        return;
+    }
     if(voucherField.val()===''){
         voucherField.focus();
         return;
     }
-    let object = couponCodes.find(obj=>obj.name===voucherField.val())
+    let object = couponCodes.find(obj=>obj.name===voucherField.val());
     if(!object){
-        console.log('not found!');
+        self.closest('.voucher-block').find('.warning-message').remove();
+        self.closest('.voucher-block').prepend('<p class="text-danger warning-message">Wrong coupon code!</p>');
         return;
     }
-    console.log(object);
     discountAmount = object.discount;
     if(object.calculateMethod==='percentage'){
         discountSign = '%';
@@ -195,6 +249,8 @@ $(document).on('click', '.btn-apply-voucher-js', function (e) {
     }
     $('.discount-note-js').html('<span class="currency">$</span><span>'+object.discount+'</span><span>'+discountSign+'</span>');
     $('.discount-js').html(discountAmount);
+    $('.discount-code-name-js').val(object.discount);
+    $('.discount-amount-name-js').val(discountAmount);
     calculateGrandTotal();
 });
 
@@ -205,8 +261,8 @@ $(document).on('click', '.btn-checkout-js', function (e) {
     $('.loader-div').addClass('active');
     setTimeout(function () {
         $('.loader-div').removeClass('active');
+        location.reload(true);
     },2000);
-
 });
 
 //=== REGULAR PRODUCT ITEM QUANTITY CHANGE ACTION
@@ -266,6 +322,15 @@ $(document).on('keyup focus blur', '.form-group .form-control', function (e) {
     }
 });
 
+//=== VOUCER FIELD FOCUS
+$(document).on('keyup', '.voucher-field-js', function () {
+    let self = $(this);
+    if(self.val()!==''){
+        self.closest('.voucher-block').find('.warning-message').remove();
+    }
+});
+
+//=== ADDIN ITEM TO THE CART IF ANY ITEMS SELECTED ON DOCUMENT READY
 $('.products-wrapper .product-single').each(function (i, element) {
     if($(element).find('.item-quantity').val()>0){
         addItemToCart($(element).find('.item-quantity'), $('.cart-item-list'));
@@ -276,8 +341,42 @@ $('.products-wrapper .product-single').each(function (i, element) {
 });
 
 
-
 //=== FUNCTIONS DEFINITION
+function loadProducts(itemCategory){
+    $('.loader-div').addClass('active');
+    let clonedSingleProduct = $('.single-product-to-clone .product-single-box').clone();
+    itemListByCategory = itemList.filter(element=> element.ticketCategory===itemCategory);
+    $('.products-regular-wrapper-row-js').empty();
+    for(let i=0; i<itemListByCategory.length; i++){
+        let dataId = 'item-group-'+itemCategory+'-'+(i+1),
+            productKey = itemListByCategory[i].key,
+            productName = itemListByCategory[i].name,
+            productPrice = itemListByCategory[i].price;
+        clonedSingleProduct.find('.product-single').attr('data-name', productName);
+        clonedSingleProduct.find('.product-single').attr('data-price', productPrice);
+        clonedSingleProduct.find('.product-single').attr('data-id', dataId);
+        clonedSingleProduct.find('.product-single').attr('data-key', productKey);
+        clonedSingleProduct.find('.product-title').html(productName);
+        clonedSingleProduct.find('.price-amount').html(productPrice);
+        $('.products-regular-wrapper-row-js').append(clonedSingleProduct.clone());
+    }
+    $('.loader-div').removeClass('active');
+}
+
+function isProductSelected(){
+    let addedItem = [];
+    $('.cart-item-list .cart-item').each(function (i, element) {
+        let dataId = $(element).data('id'),
+            quantity = $(element).find('.item-quantity').val();
+        addedItem.push({dataId:dataId, quantity:quantity});
+    });
+
+    for(let i = 0; i<addedItem.length; i++){
+        $('.products-regular-wrapper-row-js .product-single-box .product-single[data-id='+addedItem[i].dataId+']').addClass('active');
+        $('.products-regular-wrapper-row-js .product-single-box .product-single[data-id='+addedItem[i].dataId+']').find('.item-quantity').val(addedItem[i].quantity);
+    }
+}
+
 function quantityIncreaseDecrease(self, action){
     let qunatitySelector = self.closest('.product-quantity').find('.item-quantity'),
         quantitySelectorValue = parseInt(qunatitySelector.val());
@@ -302,6 +401,7 @@ function addItemToCart(self, itemHolder){
         pricePerItem = parseFloat(self.closest('.product-single').data('price')),
         priceTotal = ticketQuantity * pricePerItem,
         dataId = self.closest('.product-single').data('id'),
+        dataKey = self.closest('.product-single').data('key'),
         cartItemClone = $('.cart-item-to-clone .cart-item').clone();
 
     cartItemClone.attr('data-id',dataId);
@@ -311,6 +411,12 @@ function addItemToCart(self, itemHolder){
     cartItemClone.find('.item-title').html(ticketName);
     cartItemClone.find('.item-quantity').val(ticketQuantity);
     cartItemClone.find('.item-price').html(priceTotal);
+
+    cartItemClone.find('.product-key').val(dataKey);
+    cartItemClone.find('.product-name').val(ticketName);
+    cartItemClone.find('.product-quantity').val(ticketQuantity);
+    cartItemClone.find('.product-unit-price').val(pricePerItem);
+    cartItemClone.find('.product-price').val(priceTotal);
 
     //=== ADD/UPDATE ITEM INTO CART
     if($('.cart-item-list .cart-item').hasClass(dataId)) {
@@ -328,7 +434,7 @@ function addItemToCart(self, itemHolder){
 
 }
 
-function addCustomItemToCart(self, dataId, itemName, itemQuantity, itemPrice, itemTotalPrice) {
+function addCustomItemToCart(self, dataId, dataKey, itemName, itemQuantity, itemPrice, itemTotalPrice) {
     let cartItemClone = $('.cart-item-to-clone .cart-item').clone();
     cartItemClone.attr('data-id',dataId);
     cartItemClone.attr('data-price', itemPrice);
@@ -342,6 +448,12 @@ function addCustomItemToCart(self, dataId, itemName, itemQuantity, itemPrice, it
         cartItemClone.find('.price-holder .price').css('padding-left',0);
         cartItemClone.attr('data-quantity', 1);
     }
+
+    cartItemClone.find('.product-key').val(dataKey);
+    cartItemClone.find('.product-name').val(itemName);
+    cartItemClone.find('.product-quantity').val(itemQuantity);
+    cartItemClone.find('.product-unit-price').val(itemPrice);
+    cartItemClone.find('.product-price').val(itemTotalPrice);
 
     //=== ADD/UPDATE ITEM INTO CART
     if($('.cart-item-list .cart-item').hasClass(dataId)) {
@@ -381,9 +493,13 @@ function cartIsEmpty(){
 }
 
 function updateCartItem(dataId, ticketQuantity, priceTotal){
-    $('.cart-item-list .cart-item.'+dataId).find('.item-quantity').val(ticketQuantity);
-    $('.cart-item-list .cart-item.'+dataId).attr('data-quantity', ticketQuantity);
-    $('.cart-item-list .cart-item.'+dataId).find('.item-price').html(priceTotal);
+    let cartItemToUpdate = $('.cart-item-list .cart-item.'+dataId);
+    cartItemToUpdate.find('.item-quantity').val(ticketQuantity);
+    cartItemToUpdate.attr('data-quantity', ticketQuantity);
+    cartItemToUpdate.find('.item-price').html(priceTotal);
+
+    cartItemToUpdate.find('.product-quantity').val(ticketQuantity);
+    cartItemToUpdate.find('.product-price').val(priceTotal);
 }
 
 function removeCartItem(self, dataId){
@@ -411,8 +527,9 @@ function calculateTotal(){
 
 function calculateGrandTotal(){
     let discount = parseFloat($('.discount-js').text()),
-        total = parseFloat($('.subtotal-js').text());
-    total = total - discount;
+        total = parseFloat($('.subtotal-js').text()),
+        donationAmount = parseFloat($('.donation-js').text());
+    total = (total - discount) + donationAmount;
     if(total<1){
         total = 0;
     }

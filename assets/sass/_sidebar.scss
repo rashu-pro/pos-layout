@@ -85,6 +85,7 @@
 }
 
 .voucher-block{
+  position: relative;
   .form-control{
     padding: 0 10px;
     font-size:16px;
@@ -99,4 +100,13 @@
       background-color: #303030;
     }
   }
+  .warning-message{
+    position: absolute;
+    top:-22px;
+  }
+
+}
+
+.donation-tr{
+  display: none;
 }

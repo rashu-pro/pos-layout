@@ -18,12 +18,8 @@ select{
     margin-bottom:15px;
     position: relative;
     .warning-message{
-      margin: 0;
       position: absolute;
-      font-size: 14px;
-      padding-left: 0;
       bottom: -20px;
-      line-height: 1.2;
     }
   }
 }
@@ -46,4 +42,11 @@ input::-webkit-inner-spin-button {
 /* Firefox */
 input[type=number] {
   -moz-appearance: textfield;
+}
+
+.warning-message{
+  margin: 0;
+  font-size: 14px;
+  padding-left: 0;
+  line-height: 1.2;
 }

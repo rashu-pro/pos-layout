@@ -534,6 +534,9 @@ body {
   font-weight: 600;
 }
 
+.voucher-block {
+  position: relative;
+}
 .voucher-block .form-control {
   padding: 0 10px;
   font-size: 16px;
@@ -547,6 +550,14 @@ body {
 .voucher-block .btn:hover {
   transform: none;
   background-color: #303030;
+}
+.voucher-block .warning-message {
+  position: absolute;
+  top: -22px;
+}
+
+.donation-tr {
+  display: none;
 }
 
 .form-control {
@@ -569,12 +580,8 @@ select {
   position: relative;
 }
 .form-group .warning-message {
-  margin: 0;
   position: absolute;
-  font-size: 14px;
-  padding-left: 0;
   bottom: -20px;
-  line-height: 1.2;
 }
 
 .input-group-text {
@@ -591,6 +598,13 @@ input::-webkit-inner-spin-button {
 /* Firefox */
 input[type=number] {
   -moz-appearance: textfield;
+}
+
+.warning-message {
+  margin: 0;
+  font-size: 14px;
+  padding-left: 0;
+  line-height: 1.2;
 }
 
 .bounce {
