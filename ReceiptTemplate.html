@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Reciept</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:300,400,500,700" rel="stylesheet">
+
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        p, h1, h2, h3, h4, h5, a, span {
+            line-height: 1.1;
+        }
+
+        table {
+            width: 100%;
+        }
+
+        .text-uppercase {
+            text-transform: uppercase;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .weight-500 {
+            font-weight: 500;
+        }
+
+        .weight-700 {
+            font-weight: 700;
+        }
+
+        .font-20 {
+            font-size: 14px;
+        }
+
+        .receipt-container {
+            background: #fff;
+            color: #000;
+            font-family: 'Roboto Mono',monospace;
+            font-weight: 400;
+            width: 77mm;
+            margin: 0 auto;
+            padding: 10px 0;
+            font-size: 8px;
+            line-height: 1.1;
+        }
+
+        .receipt-header {
+            text-align: center;
+            margin-bottom: 10px;
+            padding-right: 18px;
+        }
+
+
+        .receipt-title {
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .tax-invoice-area {
+            padding-right: 18px;
+        }
+
+        .foot-area {
+            padding-right: 18px;
+        }
+
+        .dashed-border td {
+            padding-top: 5px;
+            padding-bottom: 5px;
+            border-top: 1px dashed #202020;
+            border-bottom: 1px dashed #202020;
+        }
+
+        .dashed-border-bottom td {
+            padding-top: 5px;
+            padding-bottom: 5px;
+            border-bottom: 1px dashed #202020;
+        }
+
+        .td-padding-10 {
+            padding-top: 5px;
+            padding-bottom: 5px;
+        }
+
+        .padding-top-10 {
+            padding-top: 5px;
+        }
+
+        .td-padding-bottom-10 td {
+            padding-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+
+
+    <div class="receipt-container">
+        <div class="receipt-header">
+            <h2 class="receipt-title text-uppercase">
+                Khalifa University of Science and Technology
+            </h2>
+            <p>
+                <span class="left-indicator">PO Box : </span>
+                127788, Abu Dhabi, UAE
+            </p>
+
+            <p>
+                <span class="left-indicator">Tel : </span>+9712-401 8000
+                <span class="left-indicator">Fax : </span>+9712-447 2442
+            </p>
+
+            <p>
+                <span class="left-indicator">TRN : </span>100503552000003
+            </p>
+        </div>
+
+        <div class="tax-invoice-area">
+            <p class="text-uppercase text-center" style="font-weight:bold;font-size:14px">Tax Invoice</p>
+
+            <table border="0" style="margin-bottom:10px;">
+                <tr>
+                    <td style="font-size:10px">Bill# : </td>
+                    <td style="font-size:10px">450</td>
+                    <td style="font-size:10px">Cashier : </td>
+                    <td style="font-size:10px" class="text-uppercase">Mr. Raihan</td>
+                </tr>
+                <tr>
+                    <td style="font-size:10px">Date :</td>
+                    <td style="font-size:10px">27/07/2022</td>
+                    <td style="font-size:10px">Time : </td>
+                    <td style="font-size:10px">02:30 PM</td>
+                </tr>
+                <tr>
+                    <td style="font-size:10px">By :</td>
+                    <td style="font-size:10px">Mr. Raihan</td>
+                </tr>
+
+            </table>
+
+            <table border="0">
+                <thead>
+                    <tr class="dashed-border">
+                        <td style="font-size:10px">
+                            Product
+                        </td>
+
+                        <td style="font-size:10px">
+                            Price
+                        </td>
+
+                        <td style="font-size:10px">
+                            Qty
+                        </td>
+
+                        <td align="right" style="font-size:10px">
+                            Amount(AED)
+                        </td>
+                    </tr>
+                </thead>
+
+                <tbody style="margin-bottom:10px;">
+                <tr>
+                    <td style="font-size:10px">@item.Title Ticket(s)</td>
+                    <td style="font-size:10px" align="center">$50</td>
+                    <td style="font-size:10px" align="center">5</td>
+                    <td style="font-size:10px" align="right">$50</td>
+                </tr>
+
+                <tr>
+                    <td style="font-size:10px">@item.Title Ticket(s)</td>
+                    <td style="font-size:10px" align="center">$50</td>
+                    <td style="font-size:10px" align="center">5</td>
+                    <td style="font-size:10px" align="right">$50</td>
+                </tr>
+
+                <tr>
+                    <td style="font-size:10px">@item.Title Ticket(s)</td>
+                    <td style="font-size:10px" align="center">$50</td>
+                    <td style="font-size:10px" align="center">5</td>
+                    <td style="font-size:10px" align="right">$250</td>
+                </tr>
+                </tbody>
+
+                <tfoot>
+                    <tr class="dashed-border">
+                        <td style="font-size:10px" colspan="3" class="weight-700">
+                            Total amount payable<br>
+                            Total VAT chargeable (5%)<br>
+                        </td>
+
+                        <td style="font-size:10px" align="right" class="weight-700">
+                            $250<br>
+                            $20<br>
+                        </td>
+                    </tr>
+
+                    <tr class="dashed-border-bottom font-20 text-uppercase weight-700">
+                        <td style="font-size:12px" colspan="3">
+                            Net Total
+                        </td>
+                        <td style="font-size:12px" align="right">$270</td>
+                    </tr>
+                </tfoot>
+            </table>
+
+        </div>
+
+        <div class="foot-area padding-top-10">
+            <p class="text-center">
+                <span class="left-indicator">Print Date&Time: </span>
+                27-07-2022; 05:30:05 PM
+            </p>
+            <br />
+            <br />
+        </div>
+    </div>
+
+
+</body>
+</html>
+

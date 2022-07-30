@@ -38,9 +38,18 @@
         display: flex;
         justify-content: space-between;
         background-color: #eaf5fa;
-        font-weight:600;
-        font-size: 18px;
-        padding: 20px 10px;
+        //font-weight:600;
+        //font-size: 18px;
+        padding: 0 10px;
+        .table{
+          td,th{
+            padding:8px 0;
+            &:last-child{
+              text-align: right;
+            }
+
+          }
+        }
       }
       .price{
 
@@ -65,5 +74,29 @@
 
   @media (min-width: $responsive-breakpoint){
     height:90vh;
+  }
+}
+
+.grand-total-tr{
+  font-size: 18px;
+  td,th{
+    font-weight: 600;
+  }
+}
+
+.voucher-block{
+  .form-control{
+    padding: 0 10px;
+    font-size:16px;
+  }
+  .btn{
+    padding: 0 15px;
+    min-width: 0;
+    background-color: #202020;
+    color:#fff;
+    &:hover{
+      transform:none;
+      background-color: #303030;
+    }
   }
 }

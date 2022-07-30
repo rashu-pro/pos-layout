@@ -3,6 +3,10 @@
   //background-color: #f8f8f8;
   background-color: #f4fafc;
 
+  @media (max-width:768px) {
+    padding-bottom:100px;
+  }
+
   &-inner{
     padding: 0 30px 20px;
     &.no-padding{
@@ -24,7 +28,7 @@
       font-weight: $font-semibold;
       margin-bottom:0px;
       @media (min-width:992px){
-        margin-bottom:8px;
+        //margin-bottom:8px;
       }
     }
 
@@ -240,6 +244,16 @@
       }
     }
   }
+
+  &-custom{
+    .product{
+      &-quantity{
+        .form-control{
+          width:80px;
+        }
+      }
+    }
+  }
 }
 
 .container{
@@ -407,3 +421,14 @@
     max-width: 1270px;
   }
 }
+
+.item-box{
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px #cee9fe;
+  margin-bottom:20px;
+  background-color: #fff;
+  padding:15px;
+}
+
