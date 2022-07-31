@@ -5,13 +5,27 @@
   left: 0;
   right: 0;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   color: #202020;
-  background: #202020ad;
-  z-index: 999;
+  //background: #202020ad;
+  background-color: rgba(53, 53, 53, 0.84);
+  z-index: 9999;
   opacity: 0;
   visibility: hidden;
+  text-align: center;
+
+  .loader-notice{
+    margin-top:20px;
+    margin-bottom:0;
+    font-size:22px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: #fff;
+    border-radius: 8px;
+  }
+
   &.active{
     opacity: 1;
     visibility: visible;

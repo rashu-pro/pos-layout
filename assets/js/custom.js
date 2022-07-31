@@ -4,21 +4,6 @@
 
 const bodyOverlay = document.querySelector('.body-overlay-js');
 const cartSidebar = document.querySelector('.sidebar-js');
-const itemList = [
-    {name:'Adult', price:'89', key:'60BABEEA-9EFE-43CD-9FFF-B2B9C8B9043E', ticketCategory:'convention'},
-    {name:'Couple', price:'169', key:'60BABEEA-9EFE-43CD-9FFF-B2B9C8B9043E', ticketCategory:'convention'},
-    {name:'Group of 4 Adult or more', price:'320', key:'60BABEEA-9EFE-43CD-9FFF-B2B9C8B9043E', ticketCategory:'convention'},
-    {name:'College Student (18+)', price:'79', key:'60BABEEA-9EFE-43CD-9FFF-B2B9C8B9043E', ticketCategory:'convention'},
-    {name:'Youth/Myna (12-18)', price:'59', key:'60BABEEA-9EFE-43CD-9FFF-B2B9C8B9043E', ticketCategory:'convention'},
-    {name:'Senior Citized (65+)', price:'79', key:'60BABEEA-9EFE-43CD-9FFF-B2B9C8B9043E', ticketCategory:'convention'},
-    {name:'Saturday', price:'100', key:'60BABEEA-9EFE-43CD-9FFF-B2B9C8B9043E', ticketCategory:'matrimonial'},
-    {name:'Sunday', price:'100', key:'60BABEEA-9EFE-43CD-9FFF-B2B9C8B9043E', ticketCategory:'matrimonial'},
-    {name:'Both Days', price:'175', key:'60BABEEA-9EFE-43CD-9FFF-B2B9C8B9043E', ticketCategory:'matrimonial'},
-    {name:'Saturday With One Parent/Wali', price:'200', key:'60BABEEA-9EFE-43CD-9FFF-B2B9C8B9043E', ticketCategory:'matrimonial'},
-    {name:'Sunday With One Parent/Wali', price:'200', key:'60BABEEA-9EFE-43CD-9FFF-B2B9C8B9043E', ticketCategory:'matrimonial'},
-    {name:'Both With One Parent/Wali', price:'350', key:'60BABEEA-9EFE-43CD-9FFF-B2B9C8B9043E', ticketCategory:'matrimonial'},
-    {name:'Chaplaincy Training (Includes Lunch)', price:'79', key:'60BABEEA-9EFE-43CD-9FFF-B2B9C8B9043E', ticketCategory:'chaplaincy'}
-];
 const couponCodes = [
     {name:'coupon', discount:'20', calculateMethod:'percentage'},
     {name:'discount', discount:'30', calculateMethod:'percentage'},
@@ -174,7 +159,7 @@ $(document).on('click', '.btn-custom-product-add-js', function (e) {
     $('.loader-div').addClass('active');
     itemName = self.closest('.product-custom').find('.product-custom-name-js').val();
 
-    addCustomItemToCart(self, dataId, false, itemName, itemQuantity, itemPrice, itemTotalPrice);
+    addCustomItemToCart(self, dataId, false, itemName, false, itemQuantity, itemPrice, itemTotalPrice);
     calculateTotal();
     calculateGrandTotal();
     $('.loader-div').removeClass('active');
@@ -228,6 +213,9 @@ $(document).on('click', '.btn-apply-voucher-js', function (e) {
     if(subtotal<1){
         self.closest('.voucher-block').find('.warning-message').remove();
         self.closest('.voucher-block').prepend('<p class="text-danger warning-message">Add an item first!</p>');
+        setTimeout(function () {
+            self.closest('.voucher-block').find('.warning-message').remove();
+        },3000);
         return;
     }
     if(voucherField.val()===''){
@@ -257,12 +245,46 @@ $(document).on('click', '.btn-apply-voucher-js', function (e) {
 //=== CHECKOUT BUTTON CLICK
 $(document).on('click', '.btn-checkout-js', function (e) {
     e.preventDefault();
-    if(parseInt($('.grand-total-js').text()<1)) return;
+    if($('.cart-item-list .cart-item').length<1){
+        $('.empty-cart-notice').addClass('focused');
+        setTimeout(function () {
+            $('.empty-cart-notice').removeClass('focused');
+        },200);
+        return;
+    }
+
+    $('#popup-swipe-card').show();
+});
+
+//=== POPUP ACTIONS
+$(document).on('click', '.btn-close-popup-js', function (e) {
+    e.preventDefault();
+    $(this).closest('.popup-modal-js').hide();
+});
+
+//=== ACTIONS AFTER CARD SWIPED
+$(document).on('click', '.swipe-image-wrapper', function (e) {
+    let self = $(this);
+    self.closest('.popup-modal-js').hide();
+    $('.loader-div').find('.loader-notice').remove();
+    $('.loader-div').append('<p class="loader-notice">Transaction is being processed...</p>');
     $('.loader-div').addClass('active');
+
+
+});
+
+$(document).on('click', '.lds-spinner', function (e) {
+    $('.loader-div').find('.loader-notice').remove();
+    $('.loader-div').append('<p class="loader-notice text-success">Transaction has successfuly been completed.</p>');
     setTimeout(function () {
         $('.loader-div').removeClass('active');
         location.reload(true);
-    },2000);
+    },1000);
+});
+
+$(document).on('click', '.loader-notice', function (e) {
+    $('.loader-div').removeClass('active');
+    $('#popup-cc-error').show();
 });
 
 //=== REGULAR PRODUCT ITEM QUANTITY CHANGE ACTION
@@ -345,13 +367,15 @@ $('.products-wrapper .product-single').each(function (i, element) {
 function loadProducts(itemCategory){
     $('.loader-div').addClass('active');
     let clonedSingleProduct = $('.single-product-to-clone .product-single-box').clone();
-    itemListByCategory = itemList.filter(element=> element.ticketCategory===itemCategory);
+    itemListByCategory = itemList.filter(element=> element.productCategory===itemCategory);
     $('.products-regular-wrapper-row-js').empty();
     for(let i=0; i<itemListByCategory.length; i++){
         let dataId = 'item-group-'+itemCategory+'-'+(i+1),
+            productCategoryKey = itemListByCategory[i].productCategory,
             productKey = itemListByCategory[i].key,
             productName = itemListByCategory[i].name,
             productPrice = itemListByCategory[i].price;
+        clonedSingleProduct.find('.product-single').attr('data-category-key', productCategoryKey);
         clonedSingleProduct.find('.product-single').attr('data-name', productName);
         clonedSingleProduct.find('.product-single').attr('data-price', productPrice);
         clonedSingleProduct.find('.product-single').attr('data-id', dataId);
@@ -396,31 +420,33 @@ function quantityIncreaseDecrease(self, action){
 }
 
 function addItemToCart(self, itemHolder){
-    let ticketName = self.closest('.product-single').data('name'),
-        ticketQuantity = parseFloat(self.closest('.product-single').find('.item-quantity').val()),
+    let itemName = self.closest('.product-single').data('name'),
+        itemCategoryKey = self.closest('.product-single').data('category-key'),
+        itemQuantity = parseFloat(self.closest('.product-single').find('.item-quantity').val()),
         pricePerItem = parseFloat(self.closest('.product-single').data('price')),
-        priceTotal = ticketQuantity * pricePerItem,
+        priceTotal = itemQuantity * pricePerItem,
         dataId = self.closest('.product-single').data('id'),
         dataKey = self.closest('.product-single').data('key'),
         cartItemClone = $('.cart-item-to-clone .cart-item').clone();
 
     cartItemClone.attr('data-id',dataId);
     cartItemClone.attr('data-price', pricePerItem);
-    cartItemClone.attr('data-quantity', ticketQuantity);
+    cartItemClone.attr('data-quantity', itemQuantity);
     cartItemClone.addClass(dataId);
-    cartItemClone.find('.item-title').html(ticketName);
-    cartItemClone.find('.item-quantity').val(ticketQuantity);
+    cartItemClone.find('.item-title').html(itemName);
+    cartItemClone.find('.item-quantity').val(itemQuantity);
     cartItemClone.find('.item-price').html(priceTotal);
 
+    cartItemClone.find('.product-category-key').val(itemCategoryKey);
     cartItemClone.find('.product-key').val(dataKey);
-    cartItemClone.find('.product-name').val(ticketName);
-    cartItemClone.find('.product-quantity').val(ticketQuantity);
+    cartItemClone.find('.product-name').val(itemName);
+    cartItemClone.find('.product-quantity').val(itemQuantity);
     cartItemClone.find('.product-unit-price').val(pricePerItem);
     cartItemClone.find('.product-price').val(priceTotal);
 
     //=== ADD/UPDATE ITEM INTO CART
     if($('.cart-item-list .cart-item').hasClass(dataId)) {
-        updateCartItem(dataId, ticketQuantity, priceTotal);
+        updateCartItem(dataId, itemQuantity, priceTotal);
     }else{
         $('.empty-cart-notice-wrapper').removeClass('active');
         itemHolder.append(cartItemClone);
@@ -428,13 +454,13 @@ function addItemToCart(self, itemHolder){
     focusingCartItem(dataId, itemHolder);
 
     //=== WHEN QUANTITY IS ZERO
-    if(ticketQuantity<1){
+    if(itemQuantity<1){
         itemHolder.find('.cart-item.'+dataId).remove();
     }
 
 }
 
-function addCustomItemToCart(self, dataId, dataKey, itemName, itemQuantity, itemPrice, itemTotalPrice) {
+function addCustomItemToCart(self, dataId, dataKey, itemName, itemCategoryKey, itemQuantity, itemPrice, itemTotalPrice) {
     let cartItemClone = $('.cart-item-to-clone .cart-item').clone();
     cartItemClone.attr('data-id',dataId);
     cartItemClone.attr('data-price', itemPrice);
@@ -449,6 +475,7 @@ function addCustomItemToCart(self, dataId, dataKey, itemName, itemQuantity, item
         cartItemClone.attr('data-quantity', 1);
     }
 
+    cartItemClone.find('.product-category-key').val(itemCategoryKey);
     cartItemClone.find('.product-key').val(dataKey);
     cartItemClone.find('.product-name').val(itemName);
     cartItemClone.find('.product-quantity').val(itemQuantity);
@@ -519,6 +546,7 @@ function calculateTotal(){
 
     cartIsEmpty();
     $('.cart-counter').html(cartItems);
+    $('.cart-counter-js').html(cartItems);
     $('.cart-counter').addClass('bounce');
     setTimeout(function () {
         $('.cart-counter').removeClass('bounce');

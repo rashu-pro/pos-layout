@@ -1,5 +1,6 @@
 .btn{
   background-color: $bg-btn;
+  color:#fff;
   border:0;
   border-radius: $radius-btn;
   padding: $padding-btn;
@@ -46,6 +47,10 @@
     &:hover{
 
     }
+  }
+
+  &-black{
+    background-color: #202020;
   }
 
   &-block{

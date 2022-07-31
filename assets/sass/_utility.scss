@@ -4,6 +4,7 @@
 #3. PRODUCT QUANTITY STYLE
 #4. ROW COLUMN CUSTOM GAP
 #5. SEARCH WRAPPER
+#6. TEXT STYLES
  */
 
 
@@ -16,6 +17,18 @@
 }
 .ml-10{
   margin-left:10px;
+}
+.mb-10{
+  margin-bottom:10px;
+}
+.mt-10{
+  margin-top:10px;
+}
+.mt-15{
+  margin-top:15px;
+}
+.mt-20{
+  margin-top:20px;
 }
 .pb-15{
   padding-bottom:15px;
@@ -197,4 +210,11 @@ $less-gutter-amount-small: 7.5px;
     background: #645959;
     color: #fff;
   }
+}
+
+/*
+5. TEXT STYLES
+ ------------------------*/
+.text-medium{
+  font-size: $font-body-medium;
 }

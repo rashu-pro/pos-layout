@@ -25,11 +25,8 @@
 
             <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
-                    <li class="nav-item active">
-                        <a class="nav-link" href="#">isna.net</a>
-                    </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">info@isna.net</a>
+                        <img src="assets/images/sectigo_trust_seal_sm_2x.png" class="img-fluid">
                     </li>
                 </ul>
             </div>
@@ -179,88 +176,91 @@
                 </div>
 
                 <div class="col-md-12 col-lg-3 sidebar sidebar-js">
-                    <div class="sidebar-inner">
-                        <div class="sidebar-body">
-                            <div class="sidebar-title-holder d-flex align-items-center justify-content-between">
-                                <h3 class="section-title m-0">Cart <span class="cart-counter">0</span> </h3>
-                                <button type="button" class="btn btn-icon cart-close cart-close-js d-lg-none">
-                                    <img src="assets/images/close_white.png" alt="close">
-                                </button>
-                            </div>
-
-                            <div class="cart-item-list"></div>
-
-                            <div class="empty-cart-notice-wrapper active">
-                                <div class="empty-cart-notice">
-                                    <div class="empty-cart-image">
-                                        <img src="assets/images/empty-cart.png" alt="empty cart">
-                                    </div>
-                                    <h3 class="empty-cart-notice-title">Cart is empty!</h3>
+                    <form class="sidebar-form" method="post" action="#">
+                        <div class="sidebar-inner">
+                            <div class="sidebar-body">
+                                <div class="sidebar-title-holder d-flex align-items-center justify-content-between">
+                                    <h3 class="section-title m-0">Cart <span class="cart-counter">0</span> </h3>
+                                    <button type="button" class="btn btn-icon cart-close cart-close-js d-lg-none">
+                                        <img src="assets/images/close_white.png" alt="close">
+                                    </button>
                                 </div>
 
+                                <div class="cart-item-list"></div>
+
+                                <div class="empty-cart-notice-wrapper active">
+                                    <div class="empty-cart-notice">
+                                        <div class="empty-cart-image">
+                                            <img src="assets/images/empty-cart.png" alt="empty cart">
+                                        </div>
+                                        <h3 class="empty-cart-notice-title">Cart is empty!</h3>
+                                    </div>
+
+                                </div>
                             </div>
-                        </div>
 
 
-                        <div class="sidebar-footer">
+                            <div class="sidebar-footer">
 
-                            <div class="sidebar-footer-top">
-                                <div class="voucher-block">
-                                    <div class="input-group p-3">
-                                        <input type="text" class="form-control voucher-field-js" name="CouponCode" placeholder="Coupon Code">
-                                        <div class="input-group-append">
-                                            <button type="button" class="btn btn-black input-group-text btn-apply-voucher-js">Apply</button>
+                                <div class="sidebar-footer-top">
+                                    <div class="voucher-block">
+                                        <div class="input-group p-3">
+                                            <input type="text" class="form-control voucher-field-js" name="CouponCode" placeholder="Coupon Code">
+                                            <div class="input-group-append">
+                                                <button type="button" class="btn btn-black input-group-text btn-apply-voucher-js">Apply</button>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="summary-box">
-                                    <div class="table-responsive">
-                                        <table class="table table-striped">
-                                            <tbody>
-                                            <tr class="subtotal-tr">
-                                                <td>Subtotal</td>
-                                                <td><span class="currency">$</span> <span class="amount subtotal subtotal-js">0</span></td>
-                                            </tr>
+                                    <div class="summary-box">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped">
+                                                <tbody>
+                                                <tr class="subtotal-tr">
+                                                    <td>Subtotal</td>
+                                                    <td><span class="currency">$</span> <span class="amount subtotal subtotal-js">0</span></td>
+                                                </tr>
 
-                                            <tr>
-                                                <td>Discount <span class="ml-10 d-inline-block badge badge-primary discount-note-js"></span></td>
-                                                <td><span class="currency">$</span> <span class="amount discount discount-js">0</span></td>
-                                            </tr>
+                                                <tr>
+                                                    <td>Discount <span class="ml-10 d-inline-block badge badge-primary discount-note-js"></span></td>
+                                                    <td><span class="currency">$</span> <span class="amount discount discount-js">0</span></td>
+                                                </tr>
 
-                                            <tr class="donation-tr">
-                                                <td>
-                                                    <button type="button" class="btn btn-transparent btn-blank donation-remove-js">
-                                                        <img src="assets/images/close_block.png" alt="remove cart item">
-                                                    </button>
-                                                    <span class="item-name pl-10">Donation</span> </td>
-                                                <td>
-                                                    <span class="currency">$</span> <span class="amount donation-js">0</span>
-                                                </td>
-                                            </tr>
+                                                <tr class="donation-tr">
+                                                    <td>
+                                                        <button type="button" class="btn btn-transparent btn-blank donation-remove-js">
+                                                            <img src="assets/images/close_block.png" alt="remove cart item">
+                                                        </button>
+                                                        <span class="item-name pl-10">Donation</span> </td>
+                                                    <td>
+                                                        <span class="currency">$</span> <span class="amount donation-js">0</span>
+                                                    </td>
+                                                </tr>
 
-                                            <tr class="grand-total-tr">
-                                                <th>Total</th>
-                                                <th><span class="currency">$</span> <span class="amount grand-total grand-total-js">0</span></th>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                        <div class="extra-name-fields">
-                                            <input type="hidden" name="DiscountCode" value="" class="discount-code-name-js">
-                                            <input type="hidden" name="DiscountAmount" value="" class="discount-amount-name-js">
-                                            <input type="hidden" name="DonationAmount" value="" class="donation-amount-name-js">
+                                                <tr class="grand-total-tr">
+                                                    <th>Total</th>
+                                                    <th><span class="currency">$</span> <span class="amount grand-total grand-total-js">0</span></th>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                            <div class="extra-name-fields">
+                                                <input type="hidden" name="DiscountCode" value="" class="discount-code-name-js">
+                                                <input type="hidden" name="DiscountAmount" value="" class="discount-amount-name-js">
+                                                <input type="hidden" name="DonationAmount" value="" class="donation-amount-name-js">
+                                            </div>
                                         </div>
-                                    </div>
 
+                                    </div>
+                                </div>
+
+                                <div class="sidebar-footer-bottom">
+                                    <button type="button" class="btn btn-block btn-success btn-checkout-js">Checkout</button>
                                 </div>
                             </div>
 
-                            <div class="sidebar-footer-bottom">
-                                <button type="button" class="btn btn-block btn-success btn-checkout-js">Checkout</button>
-                            </div>
+
                         </div>
+                    </form>
 
-
-                    </div>
                 </div>
             </div>
         </div>
@@ -302,7 +302,8 @@
         </div>
 
         <div class="name-fields">
-            <input type="hidden" name="ProductCategoryKeys[]" class="product-key">
+            <input type="hidden" name="ProductCategoryKeys[]" class="product-category-key">
+            <input type="hidden" name="ProductKeys[]" class="product-key">
             <input type="hidden" name="Quantity[]" class="product-quantity">
             <input type="hidden" name="ProductName[]" class="product-name">
             <input type="hidden" name="ProductUnitPrice[]" class="product-unit-price">
@@ -346,6 +347,57 @@
     </div>
 </div>
 
+<!-- CARD SWIPE INDICATION POPUP -->
+<div class="popup-modal-wrapper popup-modal-js" id="popup-swipe-card">
+    <div class="popup-modal-outer">
+        <div class="popup-modal">
+            <div class="popup-modal-head">
+                <h2 class="m-0 popup-modal-head-title">Swipe the Card</h2>
+                <button type="button" class="btn btn-transparent btn-blank btn-icon btn-close-popup-js">
+                    <img src="assets/images/close_white.png" alt="close">
+                </button>
+            </div>
+            <div class="popup-modal-body">
+                <div class="info-card">
+                    <p class="mb-10 text-medium font-medium"><span class="font-semibold">Total Item: </span> <span class="total-cart-item cart-counter-js"></span> </p>
+                    <p class="m-0 text-medium font-medium"><span class="font-semibold">Total Price: </span> <span class="currency">$</span><span class="amount grand-total-js">250</span> </p>
+                </div>
+                <div class="swipe-image-wrapper text-center">
+                    <img src="assets/images/swipe_card.png" class="img-fluid" alt="swipe card">
+                    <p class="mt-20 text-medium font-semibold text-success transaction-message-js">Swipe card to pay the amount...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CARD SWIPE INDICATION POPUP -->
+<div class="popup-modal-wrapper popup-modal-js" id="popup-cc-error">
+    <div class="popup-modal-outer">
+        <div class="popup-modal">
+            <div class="popup-modal-head">
+                <h2 class="m-0 popup-modal-head-title">Wrong Information</h2>
+                <button type="button" class="btn btn-transparent btn-blank btn-icon btn-close-popup-js">
+                    <img src="assets/images/close_white.png" alt="close">
+                </button>
+            </div>
+            <div class="popup-modal-body">
+                <div class="info-card">
+                    <ul class="pl-20">
+                        <li>
+                            <p class="mb-10 text-danger text-medium font-medium"> Credit card validation has been expired</p>
+                        </li>
+                        <li>
+                            <p class="mb-10 text-danger text-medium font-medium"> Wrong CVC number</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <button type="button" class="btn btn-black btn-close-popup-js">Try Again</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="body-overlay body-overlay-js"></div>
 
@@ -356,6 +408,23 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 
+<script>
+    const itemList = [
+        {name:'Adult', price:'89', key:'60BABEEA-9EFE-43CD-9FFF-B2B9C8B9043E', productCategory:'convention'},
+        {name:'Couple', price:'169', key:'60BABEEA-9EFE-43CD-9FFF-B2B9C8B9043E', productCategory:'convention'},
+        {name:'Group of 4 Adult or more', price:'320', key:'60BABEEA-9EFE-43CD-9FFF-B2B9C8B9043E', productCategory:'convention'},
+        {name:'College Student (18+)', price:'79', key:'60BABEEA-9EFE-43CD-9FFF-B2B9C8B9043E', productCategory:'convention'},
+        {name:'Youth/Myna (12-18)', price:'59', key:'60BABEEA-9EFE-43CD-9FFF-B2B9C8B9043E', productCategory:'convention'},
+        {name:'Senior Citized (65+)', price:'79', key:'60BABEEA-9EFE-43CD-9FFF-B2B9C8B9043E', productCategory:'convention'},
+        {name:'Saturday', price:'100', key:'60BABEEA-9EFE-43CD-9FFF-B2B9C8B9043E', productCategory:'matrimonial'},
+        {name:'Sunday', price:'100', key:'60BABEEA-9EFE-43CD-9FFF-B2B9C8B9043E', productCategory:'matrimonial'},
+        {name:'Both Days', price:'175', key:'60BABEEA-9EFE-43CD-9FFF-B2B9C8B9043E', productCategory:'matrimonial'},
+        {name:'Saturday With One Parent/Wali', price:'200', key:'60BABEEA-9EFE-43CD-9FFF-B2B9C8B9043E', productCategory:'matrimonial'},
+        {name:'Sunday With One Parent/Wali', price:'200', key:'60BABEEA-9EFE-43CD-9FFF-B2B9C8B9043E', productCategory:'matrimonial'},
+        {name:'Both With One Parent/Wali', price:'350', key:'60BABEEA-9EFE-43CD-9FFF-B2B9C8B9043E', productCategory:'matrimonial'},
+        {name:'Chaplaincy Training (Includes Lunch)', price:'79', key:'60BABEEA-9EFE-43CD-9FFF-B2B9C8B9043E', productCategory:'chaplaincy'}
+    ];
+</script>
 <script src="assets/js/custom.js?v=1.0.8"></script>
 </body>
 </html>

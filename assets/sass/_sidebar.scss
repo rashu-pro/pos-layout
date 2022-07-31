@@ -61,6 +61,10 @@
     transform:translateX(0);
   }
 
+  &-form{
+    height:100%;
+  }
+
   @media (min-width:992px){
     position: sticky;
     border-left:1px solid #ddd;
@@ -110,3 +114,4 @@
 .donation-tr{
   display: none;
 }
+
