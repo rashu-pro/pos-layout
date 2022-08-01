@@ -4,6 +4,7 @@
 
 const bodyOverlay = document.querySelector('.body-overlay-js');
 const cartSidebar = document.querySelector('.sidebar-js');
+const emailValidationRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const couponCodes = [
     {name:'coupon', discount:'20', calculateMethod:'percentage'},
     {name:'discount', discount:'30', calculateMethod:'percentage'},
@@ -202,6 +203,41 @@ $(document).on('click', '.donation-remove-js', function (e) {
     calculateGrandTotal();
 });
 
+//=== IS EMAIL
+$(document).on('change', '#is-email', function () {
+    let self = $(this);
+    if(self.is(':checked')){
+        isEmail(true);
+    }else{
+        isEmail(false);
+    }
+});
+
+//=== ON EMAIL FIELD BLUR
+$(document).on('blur', '.email-address-field', function () {
+    let self = $(this),
+        parent = self.parent();
+    if(!emailValidationRegex.test(self.val())){
+        console.log('failed');
+        parent.find('.warning-message').remove();
+        setTimeout(function () {
+            parent.append('<p class="warning-message text-danger">Invalid email address!</p>');
+        },100);
+        return;
+    }
+    $('.email-address-name-js').val(self.val());
+});
+
+function isEmail(status){
+    if(!status){
+        $('.email-address-name-js').val('');
+        $('.form-group-email').hide();
+        return;
+    }
+    $('.form-group-email').show();
+    $('.email-address-field').focus();
+}
+
 //=== COUPON APPLY BUTTON CLICK
 $(document).on('click', '.btn-apply-voucher-js', function (e) {
     e.preventDefault();
@@ -210,34 +246,51 @@ $(document).on('click', '.btn-apply-voucher-js', function (e) {
         subtotal = parseFloat($('.subtotal-js').text()),
         discountAmount = 0,
         discountSign = '';
-    if(subtotal<1){
+
+    function errorLoad(message) {
         self.closest('.voucher-block').find('.warning-message').remove();
-        self.closest('.voucher-block').prepend('<p class="text-danger warning-message">Add an item first!</p>');
+        self.closest('.voucher-block').prepend('<p class="text-danger warning-message">'+message+'</p>');
         setTimeout(function () {
             self.closest('.voucher-block').find('.warning-message').remove();
         },3000);
+    }
+    if(subtotal<1){
+        errorLoad('Add an item first!');
         return;
     }
+
     if(voucherField.val()===''){
         voucherField.focus();
         return;
     }
-    let object = couponCodes.find(obj=>obj.name===voucherField.val());
-    if(!object){
-        self.closest('.voucher-block').find('.warning-message').remove();
-        self.closest('.voucher-block').prepend('<p class="text-danger warning-message">Wrong coupon code!</p>');
-        return;
+
+    if(voucherField.data('type')==='solid'){
+        if(voucherField.val()<1){
+            errorLoad('Invalid discount!');
+            return;
+        }
+
+        if(parseFloat(voucherField.val())>=subtotal){
+            errorLoad('Invalid discount!');
+            return;
+        }
+        discountAmount = parseFloat(voucherField.val());
+    }else{
+        let object = couponCodes.find(obj=>obj.name===voucherField.val());
+        if(!object){
+            errorLoad('Wrong coupon code!');
+            return;
+        }
+        discountAmount = object.discount;
+        if(object.calculateMethod==='percentage'){
+            discountSign = '%';
+            discountAmount = (parseFloat(object.discount)*subtotal)/100;
+        }
+        $('.discount-code-name-js').val(object.discount);
+        $('.discount-note-js').html('<span class="currency">$</span><span>'+object.discount+'</span><span>'+discountSign+'</span>');
     }
-    discountAmount = object.discount;
-    if(object.calculateMethod==='percentage'){
-        discountSign = '%';
-        console.log('discount amount',parseFloat(object.discount));
-        console.log('subtotal', subtotal);
-        discountAmount = (parseFloat(object.discount)*subtotal)/100;
-    }
-    $('.discount-note-js').html('<span class="currency">$</span><span>'+object.discount+'</span><span>'+discountSign+'</span>');
+
     $('.discount-js').html(discountAmount);
-    $('.discount-code-name-js').val(object.discount);
     $('.discount-amount-name-js').val(discountAmount);
     calculateGrandTotal();
 });

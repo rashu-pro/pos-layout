@@ -439,3 +439,8 @@
   padding: 15px;
 }
 
+.form-group{
+  &-email{
+    display: none;
+  }
+}
