@@ -1,25 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>POS Invoice</title>
-
-<link href="https://fonts.googleapis.com/css?family=Roboto+Mono:300,400,500,700" rel="stylesheet">
-
-<link rel="icon" href="assets/images/favicon_isna.png">
-
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POS Invoice</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:300,400,500,700" rel="stylesheet">
+    <link rel="icon" href="../assets/images/favicon_isna.png">
+
     <style>
+
         body {
             margin: 0;
             padding: 0;
-            font-family: 'Roboto Mono', monospace;
+            font-family: "Roboto Mono", monospace;
+            box-sizing: border-box;
+            font-size: 10px;
         }
 
         @page {
-            size: 2.8in 8in;
-            margin-top: 0.2cm;
-            margin-left: 0.2cm;
-            margin-right: 0.2cm;
+            size: 70mm 0;
+        }
+
+        .receipt-wrapper {
+            width: 70mm;
+            margin: 0 auto;
+            /*padding:2mm 4mm;*/
+            /*border:1px dashed #9b9b9b #ddd;*/
         }
 
         table {
@@ -36,11 +41,12 @@
             vertical-align: middle;
         }
 
-        .items{
+        .items {
             /*border-collapse: collapse;*/
         }
-        .items td, .items th{
-            padding:3px 0px;
+
+        .items td, .items th {
+            padding: 2px 4px;
         }
 
         .items thead {
@@ -52,7 +58,7 @@
         }
 
         .bill-details td {
-            font-size: 12px;
+            font-size: 10px;
         }
 
         .receipt {
@@ -60,12 +66,13 @@
         }
 
         .items .heading {
-            font-size: 12px;
+            font-size: 10px;
             text-transform: uppercase;
-            border-top:1px dashed;
+            border-top: 1px dashed #9b9b9b;
             margin-bottom: 4px;
-            border-bottom: 1px dashed;
+            border-bottom: 1px dashed #9b9b9b;
             vertical-align: middle;
+            font-weight: 500;
         }
 
         .items thead tr th:first-child,
@@ -78,63 +85,82 @@
         }
 
         .items td {
-            font-size: 12px;
+            font-size: 10px;
+            line-height: 1.1;
             text-align: right;
             vertical-align: bottom;
+            font-weight: 300;
+        }
+
+        .items tfoot tr td,
+        .items tfoot tr th {
+            font-weight: 400;
         }
 
         .sum-up {
             text-align: right;
         }
+
         .total {
-            font-size: 13px;
-            /*border-top:1px dashed black;*/
-            border-bottom:1px dashed black;
+            font-size: 12px;
+            font-weight: 500;
+            /*border-top:1px dashed #9b9b9b black;*/
+            border-bottom: 1px dashed #9b9b9b;
         }
+
         .total.text, .total.price {
             text-align: right;
         }
-        .total.price{
+
+        .total.price {
             font-weight: bold;
         }
+
         .line {
-            border-top:1px dashed;
+            border-top: 1px dashed #9b9b9b;
         }
+
         .heading.rate {
             width: 20%;
         }
+
         .heading.amount {
             width: 25%;
         }
+
         .heading.qty {
             width: 5%
         }
+
         p {
             padding: 1px;
             margin: 0;
         }
+
         section, footer {
             font-size: 12px;
         }
-        .payment-method{
-            padding-top:10px;
+
+        .payment-method {
+            padding-top: 10px;
             font-size: 12px;
-        }
-        .invoice-footer{
         }
 
-        .receipt-wrapper{
-            width:80mm;
-            margin:0px auto;
+        .invoice-footer {
         }
-        .invoice-header{
+
+        .invoice-header {
             text-align: center;
-            font-size: 12px;
+            font-size: 10px;
+            line-height: 1.3;
         }
-        .bill-details td{
-            padding:2px 0px;
+
+        .bill-details td {
+            padding: 2px 4px;
+            font-weight: 300;
         }
-        .text-right{
+
+        .text-right {
             text-align: right;
         }
     </style>
@@ -144,19 +170,23 @@
 
 <div class="receipt-wrapper">
     <div class="invoice-header">
-        <h2 style="font-size: 14px; margin-bottom:2px; margin-top:0;padding-bottom:0px;padding-top:10px;border-bottom:0px dashed;text-align: center">ISLAMIC SOCIETY OF NORTH AMERICA</h2>
-        <p>6555 S. County Rd. 750 E <br /> Plainfield, IN 46168</p>
+        <h2 style="font-size: 12px; font-weight:500; margin-bottom:2px; margin-top:0;padding-bottom:0;padding-top:5px;border-bottom:0px dashed;text-align: center">
+            ISLAMIC SOCIETY OF NORTH AMERICA</h2>
+        <p>6555 S. County Rd. 750 E <br/> Plainfield, IN 46168</p>
         <p><span>Tel: 317 8398157</span> <span>/</span> <span>Email: info@isna.net</span></p>
     </div>
 
-    <p style="font-size: 15px;font-weight:bold;text-align: center;margin-top:10px;border-top:1px dashed">Order Receipt</p>
-    <!--<p>Order Number : # 15245</p>-->
+    <p style="font-size: 12px;font-weight:500;text-align: center;margin-top:10px;border-top:1px dashed #9b9b9b">Order
+        Receipt</p>
 
     <table class="bill-details">
         <tbody>
         <tr>
-            <td>Bill : <span>#1245</span></td>
-            <td>Cashier : <span>Mr. Raihan</span></td>
+            <td colspan="2">Invoice No : <span>#16546545645654</span></td>
+        </tr>
+
+        <tr>
+            <td colspan="2">Bill No: <span>B8B7F2FCA6AC4,DCC425AF668D4</span></td>
         </tr>
 
         <tr>
@@ -178,39 +208,41 @@
 
         <tbody>
         <tr>
-            <td>Adult</td>
+            <td>DONATION</td>
             <td>1</td>
-            <td class="price"><span>$</span><span>89</span></td>
+            <td class="price"><span>$</span><span>200</span></td>
         </tr>
-
         <tr>
-            <td>Couple</td>
-            <td>1</td>
-            <td class="price"><span>$</span><span>169</span></td>
+            <td>Bedges</td>
+            <td>3</td>
+            <td class="price"><span>$</span><span>30</span></td>
         </tr>
-
         <tr>
-            <td>Group of 4 Adult</td>
+            <td>CSRL (Community Service Recognition Luncheon)</td>
             <td>1</td>
-            <td class="price"><span>$</span><span>320</span></td>
+            <td class="price"><span>$</span><span>200</span></td>
         </tr>
-
         <tr>
-            <td>College Student (18+)</td>
-            <td>1</td>
-            <td class="price"><span>$</span><span>79</span></td>
+            <td>Senior citizen (65+)</td>
+            <td>2</td>
+            <td class="price"><span>$</span><span>178</span></td>
+        </tr>
+        <tr>
+            <td>Group of 4 adult or more</td>
+            <td>2</td>
+            <td class="price"><span>$</span><span>180</span></td>
         </tr>
         </tbody>
 
         <tfoot>
         <tr>
             <td colspan="2" class="sum-up line text-right">Subtotal</td>
-            <td class="line price"><span>$</span><span>578.00</span></td>
+            <td class="line price"><span>$</span><span>1928</span></td>
         </tr>
 
         <tr>
             <th colspan="2" class="total text">Total</th>
-            <td class="total price"><span>$</span><span>578.00</span></td>
+            <td class="total price"><span>$</span><span>1928</span></td>
         </tr>
         </tfoot>
     </table>

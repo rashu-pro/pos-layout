@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>POS Invoice</title>
+
+<link href="https://fonts.googleapis.com/css?family=Roboto+Mono:300,400,500,700" rel="stylesheet">
+
+<link rel="icon" href="assets/images/favicon_isna.png">
+
+<head>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        @page {
+            /*size: 2.8in 8in;*/
+            size: 70mm 0;
+            /*margin-top: 0.2cm;*/
+            /*padding-left: 20mm;*/
+            /*padding-right: 20mm;*/
+            /*border:1px dashed #202020;*/
+        }
+
+        table {
+            width: 100%;
+        }
+
+        tr {
+            width: 100%;
+
+        }
+
+        h1 {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .items{
+            /*border-collapse: collapse;*/
+        }
+        .items td, .items th{
+            padding:3px 4px;
+        }
+
+        .items thead {
+            text-align: center;
+        }
+
+        .center-align {
+            text-align: center;
+        }
+
+        .bill-details td {
+            font-size: 12px;
+        }
+
+        .receipt {
+            font-size: medium;
+        }
+
+        .items .heading {
+            font-size: 12px;
+            text-transform: uppercase;
+            border-top:1px dashed;
+            margin-bottom: 4px;
+            border-bottom: 1px dashed;
+            vertical-align: middle;
+        }
+
+        .items thead tr th:first-child,
+        .items tbody tr td:first-child {
+            width: 47%;
+            min-width: 47%;
+            max-width: 47%;
+            word-break: break-all;
+            text-align: left;
+        }
+
+        .items td {
+            font-size: 12px;
+            text-align: right;
+            vertical-align: bottom;
+        }
+
+        .sum-up {
+            text-align: right;
+        }
+        .total {
+            font-size: 13px;
+            /*border-top:1px dashed black;*/
+            border-bottom:1px dashed black;
+        }
+        .total.text, .total.price {
+            text-align: right;
+        }
+        .total.price{
+            font-weight: bold;
+        }
+        .line {
+            border-top:1px dashed;
+        }
+        .heading.rate {
+            width: 20%;
+        }
+        .heading.amount {
+            width: 25%;
+        }
+        .heading.qty {
+            width: 5%
+        }
+        p {
+            padding: 1px;
+            margin: 0;
+        }
+        section, footer {
+            font-size: 12px;
+        }
+        .payment-method{
+            padding-top:10px;
+            font-size: 12px;
+        }
+        .invoice-footer{
+        }
+
+        .receipt-wrapper{
+            width:70mm;
+            margin:0 auto;
+            /*padding:2mm 4mm;*/
+            /*border:1px dashed #ddd;*/
+        }
+        .invoice-header{
+            text-align: center;
+            font-size: 12px;
+        }
+        .bill-details td{
+            padding:2px 4px;
+        }
+        .text-right{
+            text-align: right;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="receipt-wrapper">
+    <div class="invoice-header">
+        <h2 style="font-size: 14px; margin-bottom:2px; margin-top:0;padding-bottom:0px;padding-top:10px;border-bottom:0px dashed;text-align: center">ISLAMIC SOCIETY OF NORTH AMERICA</h2>
+        <p>6555 S. County Rd. 750 E <br /> Plainfield, IN 46168</p>
+        <p><span>Tel: 317 8398157</span> <span>/</span> <span>Email: info@isna.net</span></p>
+    </div>
+
+    <p style="font-size: 15px;font-weight:bold;text-align: center;margin-top:10px;border-top:1px dashed">Order Receipt</p>
+
+    <table class="bill-details">
+        <tbody>
+        <tr>
+            <td colspan="2">Invoice No : <span>#16546545645654</span></td>
+        </tr>
+
+        <tr>
+            <td colspan="2">Bill No: <span>B8B7F2FCA6AC4,DCC425AF668D4</span></td>
+        </tr>
+
+        <tr>
+            <td>Date : <span>28/07/2022</span></td>
+            <td>Time : <span>08:30 PM</span></td>
+        </tr>
+
+        </tbody>
+    </table>
+
+    <table class="items" style="margin-top:8px;">
+        <thead>
+        <tr>
+            <th class="heading name">Item</th>
+            <th class="heading qty">Qty</th>
+            <th class="heading amount" style="text-align: right">Amount</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr>
+            <td>Adult</td>
+            <td>1</td>
+            <td class="price"><span>$</span><span>89</span></td>
+        </tr>
+
+        <tr>
+            <td>Couple</td>
+            <td>1</td>
+            <td class="price"><span>$</span><span>169</span></td>
+        </tr>
+
+        <tr>
+            <td>Group of 4 Adult</td>
+            <td>1</td>
+            <td class="price"><span>$</span><span>320</span></td>
+        </tr>
+
+        <tr>
+            <td>College Student (18+)</td>
+            <td>1</td>
+            <td class="price"><span>$</span><span>79</span></td>
+        </tr>
+        </tbody>
+
+        <tfoot>
+        <tr>
+            <td colspan="2" class="sum-up line text-right">Subtotal</td>
+            <td class="line price"><span>$</span><span>578.00</span></td>
+        </tr>
+
+        <tr>
+            <th colspan="2" class="total text">Total</th>
+            <td class="total price"><span>$</span><span>578.00</span></td>
+        </tr>
+        </tfoot>
+    </table>
+
+    <div class="invoice-footer" style="text-align:center; padding-top:5px;border-top:0px dashed; padding-bottom:10px;">
+        <!--<p>Thank you for your order!</p>-->
+        <p style="font-size: 10px;">Technology Partner masjidsolutions.net</p>
+        <!--<p>www.dotworld.in</p>-->
+    </div>
+
+</div>
+
+</body>
+
+</html>

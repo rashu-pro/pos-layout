@@ -1,0 +1,78 @@
+.invoice{
+  &-wrapper{
+    width: $width-receipt;
+    margin: 0 auto;
+
+    .table{
+      td,th{
+        padding:2px 4px;
+      }
+    }
+  }
+
+  &-header{
+    font-weight: $font-regular;
+    line-height: 1.3;
+  }
+
+  &-footer{
+
+  }
+
+  &-details{
+
+  }
+}
+
+.item{
+  &-rows{
+
+    td,th{
+      &.price{
+        text-align: right;
+      }
+    }
+
+    &-head{
+      text-align: center;
+    }
+
+    &-heading{
+      border-top: 1px dashed #9b9b9b;
+      border-bottom: 1px dashed #9b9b9b;
+      margin-bottom: 4px;
+      vertical-align: middle;
+      &.name{
+        width:50%;
+        word-break: break-all;
+        text-align: left;
+      }
+      &.qty{
+        width:10%;
+      }
+      &.amount{
+        width:20%;
+      }
+    }
+
+    td{
+      vertical-align: middle;
+      line-height: 1.2;
+    }
+
+    &-foot{
+      tr{
+        td,th{
+          font-weight: $font-regular;
+        }
+        &:last-child{
+          td,th{
+            font-weight: $font-medium;
+            font-size: 11px;
+          }
+        }
+      }
+
+    }
+  }
+}

@@ -132,8 +132,8 @@ $(document).on('click', '.btn-custom-product-add-js', function (e) {
         parent = self.closest('.product-custom'),
         dataId = 'data-id-'+Math.floor(Math.random()*90000) + 10000,
         itemName = parent.data('name'),
-        itemQuantity = parseFloat(parent.find('.product-custom-price-js').val()),
-        itemPrice = parseFloat(parent.find('.item-quantity').val()),
+        itemPrice = parseFloat(parent.find('.product-custom-price-js').val()),
+        itemQuantity = parseFloat(parent.find('.item-quantity').val()),
         itemTotalPrice = itemQuantity * itemPrice,
         totalField = 0,
         validField = 0;
