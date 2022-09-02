@@ -6,9 +6,9 @@ const bodyOverlay = document.querySelector('.body-overlay-js');
 const cartSidebar = document.querySelector('.sidebar-js');
 const emailValidationRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const couponCodes = [
-    {name:'coupon', discount:'20', calculateMethod:'percentage'},
-    {name:'discount', discount:'30', calculateMethod:'percentage'},
-    {name:'voucher', discount:'50', calculateMethod:'solid'}
+    { name: 'coupon', discount: '20', calculateMethod: 'percentage' },
+    { name: 'discount', discount: '30', calculateMethod: 'percentage' },
+    { name: 'voucher', discount: '50', calculateMethod: 'solid' }
 ];
 
 let itemHolder = $('.cart-item-list');
@@ -59,7 +59,7 @@ $(document).on('click', '.product-single .btn-minus-js', function (e) {
     let self = $(this);
     quantityIncreaseDecrease(self, 'decrease');
     addItemToCart(self, $('.cart-item-list'));
-    if(self.closest('.product-quantity').find('.item-quantity').val()<1){
+    if (self.closest('.product-quantity').find('.item-quantity').val() < 1) {
         self.closest('.product-single').removeClass('active');
     }
     calculateTotal();
@@ -69,7 +69,6 @@ $(document).on('click', '.product-single .btn-minus-js', function (e) {
 $(document).on('click', '.product-custom .btn-plus-js', function (e) {
     e.preventDefault();
     let self = $(this);
-    console.log('clicked');
     quantityIncreaseDecrease(self, 'increase');
 });
 
@@ -130,7 +129,7 @@ $(document).on('click', '.btn-custom-product-add-js', function (e) {
     e.preventDefault();
     let self = $(this),
         parent = self.closest('.product-custom'),
-        dataId = 'data-id-'+Math.floor(Math.random()*90000) + 10000,
+        dataId = 'data-id-' + Math.floor(Math.random() * 90000) + 10000,
         itemName = parent.data('name'),
         itemPrice = parseFloat(parent.find('.product-custom-price-js').val()),
         itemQuantity = parseFloat(parent.find('.item-quantity').val()),
@@ -139,28 +138,31 @@ $(document).on('click', '.btn-custom-product-add-js', function (e) {
         validField = 0;
 
     self.closest('.product-custom').find('.form-control').each(function (i, element) {
-        if($(element).val()!==''){
+        if ($(element).val() !== '') {
             $(element).removeClass('invalid');
-        }else{
+        } else {
             $(element).addClass('invalid');
         }
     });
 
-    if(parent.find('.item-quantity').val()<1){
+    if (parent.find('.item-quantity').val() < 1) {
         parent.find('.item-quantity').addClass('invalid');
     }
     parent.find('.form-control.invalid').first().focus();
     parent.find('.warning-message').remove();
     parent.find('.form-control.invalid').first().after('<p class="warning-message text-danger">This field is required!</p>');
 
-    if(parent.find('.form-control.invalid').length>0){
+    if (parent.find('.form-control.invalid').length > 0) {
         return;
     }
 
     $('.loader-div').addClass('active');
     itemName = self.closest('.product-custom').find('.product-custom-name-js').val();
 
-    addCustomItemToCart(self, dataId, false, itemName, false, itemQuantity, itemPrice, itemTotalPrice);
+    addCustomItemToCart(self, dataId, null, itemName, null, itemQuantity, itemPrice, itemTotalPrice);
+   // addCustomItemToCart(self, dataId, false, itemName, false, itemQuantity, itemPrice, itemTotalPrice);
+
+
     calculateTotal();
     calculateGrandTotal();
     $('.loader-div').removeClass('active');
@@ -176,7 +178,7 @@ $(document).on('click', '.btn-donate-js', function (e) {
         itemQuantity = false,
         itemPrice = false,
         itemTotalPrice = parent.find('.donation-amount-js').val();
-    if(itemTotalPrice<1){
+    if (itemTotalPrice < 1) {
         parent.find('.form-control').first().focus();
         parent.find('.form-control').first().closest('.form-group').find('.warning-message').remove();
         parent.find('.form-control').first().after('<p class="warning-message text-danger">This field is required!</p>');
@@ -206,14 +208,14 @@ $(document).on('click', '.donation-remove-js', function (e) {
 //=== IS EMAIL
 $(document).on('change', '#is-email', function () {
     let self = $(this);
-    if(self.is(':checked')){
+    if (self.is(':checked')) {
         isEmail(true);
-    }else{
+    } else {
         isEmail(false);
     }
 });
 
-//=== ON EMAIL FIELD KEYUP
+//=== ON EMAIL FIELD TYPE
 $(document).on('keyup', '.email-address-field', function () {
     let self = $(this),
         parent = self.parent();
@@ -229,9 +231,10 @@ $(document).on('keyup', '.email-address-field', function () {
     $('.email-address-name-js').val(self.val());
 });
 
-function isEmail(status){
-    if(!status){
+function isEmail(status) {
+    if (!status) {
         $('.email-address-name-js').val('');
+        $('.form-group-email').find('.warning-message').remove();
         $('.form-group-email').hide();
         return;
     }
@@ -239,59 +242,10 @@ function isEmail(status){
     $('.email-address-field').focus();
 }
 
-//=== COUPON APPLY BUTTON CLICK
-$(document).on('click', '.btn-apply-voucher-js', function (e) {
-    e.preventDefault();
-    let self = $(this),
-        voucherField = $('.voucher-field-js'),
-        subtotal = parseFloat($('.subtotal-js').text()),
-        discountAmount = 0,
-        discountSign = '';
-
-    if(subtotal<1){
-        errorLoad('Add an item first!');
-        return;
-    }
-
-    if(voucherField.val()===''){
-        voucherField.focus();
-        return;
-    }
-
-    if(voucherField.data('type')==='solid'){
-        if(voucherField.val()<1){
-            errorLoad('Invalid discount!');
-            return;
-        }
-
-        if(parseFloat(voucherField.val())>=subtotal){
-            errorLoad('Invalid discount!');
-            return;
-        }
-        discountAmount = parseFloat(voucherField.val());
-    }else{
-        let object = couponCodes.find(obj=>obj.name===voucherField.val());
-        if(!object){
-            errorLoad('Wrong coupon code!');
-            return;
-        }
-        discountAmount = object.discount;
-        if(object.calculateMethod==='percentage'){
-            discountSign = '%';
-            discountAmount = (parseFloat(object.discount)*subtotal)/100;
-        }
-        $('.discount-code-name-js').val(object.discount);
-        $('.discount-note-js').html('<span class="currency">$</span><span>'+object.discount+'</span><span>'+discountSign+'</span>');
-    }
-
-    $('.discount-js').html(discountAmount);
-    $('.discount-amount-name-js').val(discountAmount);
-    calculateGrandTotal();
-});
-
 //=== CHECKOUT BUTTON CLICK
 $(document).on('click', '.btn-checkout-js', function (e) {
     e.preventDefault();
+
     //=== WHEN CART IS EMPTY
     if ($('.cart-item-list .cart-item').length < 1) {
         $('.empty-cart-notice').addClass('focused');
@@ -309,6 +263,7 @@ $(document).on('click', '.btn-checkout-js', function (e) {
         return;
     }
 
+
     $('#popup-swipe-card').show();
 });
 
@@ -319,39 +274,47 @@ $(document).on('click', '.btn-close-popup-js', function (e) {
 });
 
 //=== ACTIONS AFTER CARD SWIPED
-$(document).on('click', '.swipe-image-wrapper', function (e) {
-    let self = $(this);
-    self.closest('.popup-modal-js').hide();
-    $('.loader-div').find('.loader-notice').remove();
-    $('.loader-div').append('<p class="loader-notice">Transaction is being processed...</p>');
-    $('.loader-div').addClass('active');
+//$(document).on('click', '.swipe-image-wrapper', function (e) {
+//    let self = $(this);
+//    self.closest('.popup-modal-js').hide();
+//    $('.loader-div').find('.loader-notice').remove();
+//    $('.loader-div').append('<p class="loader-notice">Transaction is being processed...</p>');
+//    $('.loader-div').addClass('active');
+//});
 
 
-});
+//=== WHEN THE CARD IS VALID
+//$(document).on('click', '.lds-spinner', function (e) {
+//    $('.loader-div').find('.loader-notice').remove();
+//    $('.loader-div').append('<p class="loader-notice text-success">Transaction has successfuly been completed.</p>');
+//    setTimeout(function () {
+//        $('.loader-div').removeClass('active');
+//        location.reload(true);
+//    },1000);
+//});
 
-$(document).on('click', '.lds-spinner', function (e) {
-    $('.loader-div').find('.loader-notice').remove();
-    $('.loader-div').append('<p class="loader-notice text-success">Transaction has successfuly been completed.</p>');
-    setTimeout(function () {
-        $('.loader-div').removeClass('active');
-        location.reload(true);
-    },1000);
-});
+//$(document).on('click', '.loader-notice', function (e) {
+//    //HAVE TO ADD ALL ERRORS 
+//    $('.loader-div').removeClass('active');
+//    $('#popup-cc-error').show();
+//});
 
-$(document).on('click', '.loader-notice', function (e) {
-    $('.loader-div').removeClass('active');
-    $('#popup-cc-error').show();
-});
 
+//=== KEYUP, FOCUS, BLUR, KEYPRESS ACTION
 //=== REGULAR PRODUCT ITEM QUANTITY CHANGE ACTION
 $(document).on('keyup focus blur', '.product-single .item-quantity', function (e) {
     let self = $(this);
-    if(!parseFloat(self.val())>0){
+    if (!parseFloat(self.val()) > 0) {
         self.val(0);
+        self.closest('.product-single').removeClass('active');
     }
     addItemToCart(self, $('.cart-item-list'));
     calculateTotal();
     calculateGrandTotal();
+
+    if(parseFloat(self.val()) > 0){
+        self.closest('.product-single').addClass('active');
+    }
 });
 
 //=== CART ITEM ITEM QUANTITY CHANGE ACTION
@@ -362,7 +325,7 @@ $(document).on('keyup focus blur', '.cart-item-list .cart-item .item-quantity', 
         pricePerItem = parseFloat(self.closest('.cart-item').data('price')),
         priceTotal = ticketQuantity * pricePerItem;
     updateCartItem(dataId, ticketQuantity, priceTotal);
-    if(!parseFloat(self.val())>0){
+    if (!parseFloat(self.val()) > 0) {
         self.val(0);
     }
     updateProductQuantityOnCartItemChange(self, dataId, ticketQuantity);
@@ -386,7 +349,7 @@ $(document).on('blur', '.product-custom-price-js', function () {
 $(document).on('keyup blur', '.product-custom-price-js', function () {
     let self = $(this),
         fieldValue = self.val();
-    if(fieldValue<0){
+    if (fieldValue < 0) {
         self.val(0);
     }
 });
@@ -395,7 +358,7 @@ $(document).on('keyup focus blur', '.form-group .form-control', function (e) {
     e.preventDefault();
     let self = $(this),
         fieldValue = self.val();
-    if(fieldValue!==''){
+    if (fieldValue !== '') {
         self.closest('.form-group').find('.warning-message').remove();
     }
 });
@@ -450,9 +413,16 @@ $(document).on('keyup', '.voucher-field-js', function (e) {
     calculateGrandTotal();
 });
 
+$(document).on('blur', '.voucher-field-js', function (e) {
+    let self = $(this);
+    if(self.val()==''){
+        self.closest('.voucher-block').find('.warning-message').remove();
+    }
+});
+
 //=== ADDIN ITEM TO THE CART IF ANY ITEMS SELECTED ON DOCUMENT READY
 $('.products-wrapper .product-single').each(function (i, element) {
-    if($(element).find('.item-quantity').val()>0){
+    if ($(element).find('.item-quantity').val() > 0) {
         addItemToCart($(element).find('.item-quantity'), $('.cart-item-list'));
         calculateTotal();
         calculateGrandTotal();
@@ -462,13 +432,13 @@ $('.products-wrapper .product-single').each(function (i, element) {
 
 
 //=== FUNCTIONS DEFINITION
-function loadProducts(itemCategory){
+function loadProducts(itemCategory) {
     $('.loader-div').addClass('active');
     let clonedSingleProduct = $('.single-product-to-clone .product-single-box').clone();
-    itemListByCategory = itemList.filter(element=> element.productCategory===itemCategory);
+    itemListByCategory = itemList.filter(element => element.productCategory === itemCategory);
     $('.products-regular-wrapper-row-js').empty();
-    for(let i=0; i<itemListByCategory.length; i++){
-        let dataId = 'item-group-'+itemCategory+'-'+(i+1),
+    for (let i = 0; i < itemListByCategory.length; i++) {
+        let dataId = 'item-group-' + itemCategory + '-' + (i + 1),
             productCategoryKey = itemListByCategory[i].productCategory,
             productKey = itemListByCategory[i].key,
             productName = itemListByCategory[i].name,
@@ -485,39 +455,39 @@ function loadProducts(itemCategory){
     $('.loader-div').removeClass('active');
 }
 
-function isProductSelected(){
+function isProductSelected() {
     let addedItem = [];
     $('.cart-item-list .cart-item').each(function (i, element) {
         let dataId = $(element).data('id'),
             quantity = $(element).find('.item-quantity').val();
-        addedItem.push({dataId:dataId, quantity:quantity});
+        addedItem.push({ dataId: dataId, quantity: quantity });
     });
 
-    for(let i = 0; i<addedItem.length; i++){
-        $('.products-regular-wrapper-row-js .product-single-box .product-single[data-id='+addedItem[i].dataId+']').addClass('active');
-        $('.products-regular-wrapper-row-js .product-single-box .product-single[data-id='+addedItem[i].dataId+']').find('.item-quantity').val(addedItem[i].quantity);
+    for (let i = 0; i < addedItem.length; i++) {
+        $('.products-regular-wrapper-row-js .product-single-box .product-single[data-id=' + addedItem[i].dataId + ']').addClass('active');
+        $('.products-regular-wrapper-row-js .product-single-box .product-single[data-id=' + addedItem[i].dataId + ']').find('.item-quantity').val(addedItem[i].quantity);
     }
 }
 
-function quantityIncreaseDecrease(self, action){
+function quantityIncreaseDecrease(self, action) {
     let qunatitySelector = self.closest('.product-quantity').find('.item-quantity'),
         quantitySelectorValue = parseInt(qunatitySelector.val());
 
-    if(!quantitySelectorValue){
+    if (!quantitySelectorValue) {
         quantitySelectorValue = 0;
     }
-    if(action==='increase'){
+    if (action === 'increase') {
         qunatitySelector.val(quantitySelectorValue + 1);
     }
 
-    if(action==='decrease'){
-        if(quantitySelectorValue>0){
+    if (action === 'decrease') {
+        if (quantitySelectorValue > 0) {
             qunatitySelector.val(quantitySelectorValue - 1);
         }
     }
 }
 
-function addItemToCart(self, itemHolder){
+function addItemToCart(self, itemHolder) {
     let itemName = self.closest('.product-single').data('name'),
         itemCategoryKey = self.closest('.product-single').data('category-key'),
         itemQuantity = parseFloat(self.closest('.product-single').find('.item-quantity').val()),
@@ -527,7 +497,7 @@ function addItemToCart(self, itemHolder){
         dataKey = self.closest('.product-single').data('key'),
         cartItemClone = $('.cart-item-to-clone .cart-item').clone();
 
-    cartItemClone.attr('data-id',dataId);
+    cartItemClone.attr('data-id', dataId);
     cartItemClone.attr('data-price', pricePerItem);
     cartItemClone.attr('data-quantity', itemQuantity);
     cartItemClone.addClass(dataId);
@@ -543,33 +513,33 @@ function addItemToCart(self, itemHolder){
     cartItemClone.find('.product-price').val(priceTotal);
 
     //=== ADD/UPDATE ITEM INTO CART
-    if($('.cart-item-list .cart-item').hasClass(dataId)) {
+    if ($('.cart-item-list .cart-item').hasClass(dataId)) {
         updateCartItem(dataId, itemQuantity, priceTotal);
-    }else{
+    } else {
         $('.empty-cart-notice-wrapper').removeClass('active');
         itemHolder.append(cartItemClone);
     }
     focusingCartItem(dataId, itemHolder);
 
     //=== WHEN QUANTITY IS ZERO
-    if(itemQuantity<1){
-        itemHolder.find('.cart-item.'+dataId).remove();
+    if (itemQuantity < 1) {
+        itemHolder.find('.cart-item.' + dataId).remove();
     }
 
 }
 
 function addCustomItemToCart(self, dataId, dataKey, itemName, itemCategoryKey, itemQuantity, itemPrice, itemTotalPrice) {
     let cartItemClone = $('.cart-item-to-clone .cart-item').clone();
-    cartItemClone.attr('data-id',dataId);
+    cartItemClone.attr('data-id', dataId);
     cartItemClone.attr('data-price', itemPrice);
     cartItemClone.attr('data-quantity', itemQuantity);
     cartItemClone.addClass(dataId);
     cartItemClone.find('.item-title').html(itemName);
     cartItemClone.find('.item-quantity').val(itemQuantity);
     cartItemClone.find('.item-price').html(itemTotalPrice);
-    if(!itemQuantity){
+    if (!itemQuantity) {
         cartItemClone.find('.product-quantity').empty();
-        cartItemClone.find('.price-holder .price').css('padding-left',0);
+        cartItemClone.find('.price-holder .price').css('padding-left', 0);
         cartItemClone.attr('data-quantity', 1);
     }
 
@@ -581,9 +551,9 @@ function addCustomItemToCart(self, dataId, dataKey, itemName, itemCategoryKey, i
     cartItemClone.find('.product-price').val(itemTotalPrice);
 
     //=== ADD/UPDATE ITEM INTO CART
-    if($('.cart-item-list .cart-item').hasClass(dataId)) {
+    if ($('.cart-item-list .cart-item').hasClass(dataId)) {
         updateCartItem(dataId, itemQuantity, itemTotalPrice);
-    }else{
+    } else {
         $('.empty-cart-notice-wrapper').removeClass('active');
         itemHolder.append(cartItemClone);
     }
@@ -591,34 +561,34 @@ function addCustomItemToCart(self, dataId, dataKey, itemName, itemCategoryKey, i
     emptyCustomItemFields(self.closest('.product-custom'));
 }
 
-function emptyCustomItemFields(parent){
+function emptyCustomItemFields(parent) {
     parent.find('.form-control').val('');
 }
 
-function focusingCartItem(dataId, itemHolder){
-    itemHolder.find('.cart-item.'+dataId).addClass('focused');
+function focusingCartItem(dataId, itemHolder) {
+    itemHolder.find('.cart-item.' + dataId).addClass('focused');
     setTimeout(function () {
-        itemHolder.find('.cart-item.'+dataId).removeClass('focused');
-    },400);
+        itemHolder.find('.cart-item.' + dataId).removeClass('focused');
+    }, 400);
 }
 
-function updateProductQuantityOnCartItemChange(self, dataId, ticketQuantity){
-    $('.products-wrapper [data-id='+dataId+']').find('.item-quantity').val(ticketQuantity);
-    $('.cart-item-list [data-id='+dataId+']').attr('data-quantity', ticketQuantity);
-    if(!ticketQuantity<1) return;
+function updateProductQuantityOnCartItemChange(self, dataId, ticketQuantity) {
+    $('.products-wrapper [data-id=' + dataId + ']').find('.item-quantity').val(ticketQuantity);
+    $('.cart-item-list [data-id=' + dataId + ']').attr('data-quantity', ticketQuantity);
+    if (!ticketQuantity < 1) return;
     self.closest('.cart-item').remove();
-    $('.products-wrapper [data-id='+dataId+']').removeClass('active');
+    $('.products-wrapper [data-id=' + dataId + ']').removeClass('active');
 }
 
-function cartIsEmpty(){
+function cartIsEmpty() {
     //=== WHEN CART IS EMPTY
-    if(!$('.cart-item-list .cart-item').length>0){
+    if (!$('.cart-item-list .cart-item').length > 0) {
         $('.empty-cart-notice-wrapper').addClass('active');
     }
 }
 
-function updateCartItem(dataId, ticketQuantity, priceTotal){
-    let cartItemToUpdate = $('.cart-item-list .cart-item.'+dataId);
+function updateCartItem(dataId, ticketQuantity, priceTotal) {
+    let cartItemToUpdate = $('.cart-item-list .cart-item.' + dataId);
     cartItemToUpdate.find('.item-quantity').val(ticketQuantity);
     cartItemToUpdate.attr('data-quantity', ticketQuantity);
     cartItemToUpdate.find('.item-price').html(priceTotal);
@@ -627,21 +597,19 @@ function updateCartItem(dataId, ticketQuantity, priceTotal){
     cartItemToUpdate.find('.product-price').val(priceTotal);
 }
 
-function removeCartItem(self, dataId){
+function removeCartItem(self, dataId) {
     self.closest('.cart-item').remove();
-    $('.products-wrapper [data-id='+dataId+']').find('.item-quantity').val('0');
-    $('.products-wrapper [data-id='+dataId+']').removeClass('active');
+    $('.products-wrapper [data-id=' + dataId + ']').find('.item-quantity').val('0');
+    $('.products-wrapper [data-id=' + dataId + ']').removeClass('active');
 }
 
 function errorLoad(self, message) {
     self.closest('.voucher-block').find('.warning-message').remove();
-    self.closest('.voucher-block').prepend('<p class="text-danger warning-message">'+message+'</p>');
-    setTimeout(function () {
-        self.closest('.voucher-block').find('.warning-message').remove();
-    },4000);
+    self.closest('.voucher-block').prepend('<p class="text-danger warning-message">' + message + '</p>');
+    // self.closest('.voucher-block').find('.warning-message').remove();
 }
 
-function calculateTotal(){
+function calculateTotal() {
     let total = 0,
         cartItems = 0;
     $('.cart-item-list .cart-item').each(function (i, element) {
@@ -656,25 +624,27 @@ function calculateTotal(){
     $('.cart-counter').addClass('bounce');
     setTimeout(function () {
         $('.cart-counter').removeClass('bounce');
-    },1000);
+    }, 1000);
 }
 
-function calculateGrandTotal(){
+function calculateGrandTotal() {
     let discount = parseFloat($('.discount-js').text()),
         total = parseFloat($('.subtotal-js').text()),
         donationAmount = parseFloat($('.donation-js').text());
     total = (total - discount) + donationAmount;
-    if(total<1){
+    if (total < 1) {
         total = 0;
     }
     $('.grand-total-js').html(total);
+    //have to assign value of TotalAmount Field
+    $('#txtAmount').val(total);
 }
 
-function cartToggle(isToggle){
-    if(isToggle){
+function cartToggle(isToggle) {
+    if (isToggle) {
         bodyOverlay.style.display = 'block';
         cartSidebar.classList.add('opened');
-    }else{
+    } else {
         bodyOverlay.style.display = 'none';
         cartSidebar.classList.remove('opened');
     }

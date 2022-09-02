@@ -67,6 +67,10 @@ body {
   margin-top: 20px;
 }
 
+.mr-10 {
+  margin-right: 10px;
+}
+
 .pt-10 {
   padding-top: 10px;
 }
@@ -85,6 +89,10 @@ body {
 
 .pr-15 {
   padding-right: 15px;
+}
+
+.mb-0 {
+  margin-bottom: 0 !important;
 }
 
 /*
@@ -222,6 +230,9 @@ body {
 
 .text-muted {
   font-size: 14px;
+}
+.text-title {
+  font-size: 22px;
 }
 
 .badge {
@@ -448,9 +459,29 @@ body {
 }
 
 .popup-modal {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   width: 100%;
   border-radius: 10px;
   background-color: #fff;
+}
+.popup-modal-small .popup-modal-body {
+  min-height: 140px;
+}
+.popup-modal-headless .popup-modal-head {
+  position: relative;
+  justify-content: flex-end;
+  border: 0;
+  padding: 0;
+}
+.popup-modal-headless .popup-modal-head-title {
+  display: none;
+}
+.popup-modal-headless .popup-modal-head .btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
 }
 .popup-modal-wrapper {
   display: none;
@@ -497,6 +528,7 @@ body {
 }
 .popup-modal-foot {
   padding: 10px 20px;
+  border-top: 1px solid #ddd;
 }
 @media (min-width: 768px) {
   .popup-modal {
@@ -889,7 +921,7 @@ body {
   position: relative;
 }
 .voucher-block .form-control {
-  padding: 0 10px;
+  padding: 0 10px 0 30px;
   font-size: 16px;
 }
 .voucher-block .btn {
@@ -905,6 +937,26 @@ body {
 .voucher-block .warning-message {
   position: absolute;
   top: -22px;
+}
+.voucher-block .input-group-prepend {
+  display: inline-flex;
+  align-items: center;
+  background: #202020;
+  padding: 0 15px;
+  color: #fff;
+  position: relative;
+}
+.voucher-block .input-group-prepend .currency-sign {
+  color: #202020;
+  position: absolute;
+  right: -26px;
+  z-index: 9;
+  font-size: 22px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.voucher-block .input-group-prepend .currency-sign img {
+  max-width: 22px;
 }
 
 .donation-tr {
@@ -932,7 +984,8 @@ select {
 }
 .form-group .warning-message {
   position: absolute;
-  bottom: -20px;
+  bottom: -26px;
+  right: 0;
 }
 
 .input-group-text {
@@ -954,8 +1007,13 @@ input[type=number] {
 .warning-message {
   margin: 0;
   font-size: 14px;
-  padding-left: 0;
   line-height: 1.2;
+  color: #721c24;
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+  padding: 2px 8px;
+  border-radius: 6px;
+  box-shadow: 0 0 2px;
 }
 
 .bounce {
@@ -1065,7 +1123,6 @@ input[type=number] {
   display: block;
 }
 .empty-cart-notice.focused {
-  margin: 0 15px;
   transform: scale(0.9);
   color: #e91e63;
   background-color: rgba(214, 173, 188, 0.29);
@@ -1078,7 +1135,6 @@ input[type=number] {
 
 .main-body {
   min-height: 95vh;
-  background-color: #f4fafc;
 }
 @media (max-width: 768px) {
   .main-body {
@@ -1124,12 +1180,18 @@ input[type=number] {
 }
 
 .product-single {
-  border: 2px solid #ddd;
+  border: 2px solid #ccc6b5;
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 2px 6px #cee9fe;
   margin-bottom: 20px;
-  background-color: #fff;
+  background-color: #fff3cd;
+}
+.product-single .product-quantity .btn-icon {
+  background-color: #f6f6f6;
+  border: 1px solid #b9b1b1;
+}
+.product-single .product-quantity .form-control {
+  background: #fff;
 }
 .product-single .active-icon {
   display: none;
@@ -1416,16 +1478,16 @@ input[type=number] {
   max-width: 150px;
 }
 
-@media (min-width: 1200px) {
+@media (min-width: 1350px) {
   .container-xl, .container-lg, .container-md, .container-sm, .container {
-    max-width: 1270px;
+    max-width: 1350px;
   }
 }
 .item-box {
   border: 2px solid #ddd;
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 2px 6px #cee9fe;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.06);
   margin-bottom: 20px;
   background-color: #fff;
   padding: 15px;
@@ -1440,6 +1502,18 @@ input[type=number] {
 
 .form-group-email {
   display: none;
+}
+
+.product-regular-wrapper .row .product-single-box:nth-child(odd) .product-single {
+  background-color: #cce5ff;
+  border-color: #91a9c2;
+}
+.product-regular-wrapper .row .product-single-box:nth-child(odd) .product-single.style-3.active {
+  border-color: #018d5b;
+}
+
+.email-address-field.invalid {
+  border: 2px solid #a92834;
 }
 
 .footer-credit {

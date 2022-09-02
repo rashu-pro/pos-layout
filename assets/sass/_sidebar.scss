@@ -91,7 +91,7 @@
 .voucher-block{
   position: relative;
   .form-control{
-    padding: 0 10px;
+    padding: 0 10px 0 30px;
     font-size:16px;
   }
   .btn{
@@ -104,10 +104,38 @@
       background-color: #303030;
     }
   }
+
   .warning-message{
     position: absolute;
     top:-22px;
   }
+
+  .input{
+    &-group{
+      &-prepend{
+        display: inline-flex;
+        align-items: center;
+        background: #202020;
+        padding: 0 15px;
+        color: #fff;
+        position: relative;
+        .currency-sign{
+          color: #202020;
+          position: absolute;
+          right: -26px;
+          z-index: 9;
+          font-size: 22px;
+          top: 50%;
+          transform: translateY(-50%);
+          img{
+            max-width:22px;
+          }
+        }
+      }
+    }
+  }
+
+
 
 }
 

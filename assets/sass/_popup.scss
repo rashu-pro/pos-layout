@@ -1,5 +1,40 @@
 .popup{
   &-modal{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    &-small{
+      .popup{
+        &-modal{
+          &-body{
+            min-height:140px;
+          }
+        }
+      }
+    }
+
+    &-headless{
+      .popup{
+        &-modal{
+          &-head{
+            position: relative;
+            justify-content: flex-end;
+            border: 0;
+            padding: 0;
+            &-title{
+              display: none;
+            }
+            .btn{
+              position: absolute;
+              top:10px;
+              right:10px;
+            }
+          }
+        }
+      }
+    }
+
     &-wrapper{
       display: none;
       position: relative;
@@ -56,8 +91,10 @@
         }
       }
     }
+
     &-foot{
       padding:10px 20px;
+      border-top:1px solid #ddd;
     }
 
 

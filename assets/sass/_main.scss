@@ -1,7 +1,7 @@
 .main-body{
   min-height:95vh;
   //background-color: #f8f8f8;
-  background-color: #f4fafc;
+  //background-color: #f4fafc;
 
   @media (max-width:768px) {
     padding-bottom:100px;
@@ -60,12 +60,22 @@
 
 .product{
   &-single{
-    border: 2px solid #ddd;
+    border: 2px solid $color-item-box-border;
     border-radius: 8px;
     overflow: hidden;
-    box-shadow: 0 2px 6px #cee9fe;
+    //box-shadow: 0 2px 6px #cee9fe;
     margin-bottom:20px;
-    background-color: #fff;
+    background-color: $color-item-box;
+
+    .product-quantity{
+      .btn-icon{
+        background-color: #f6f6f6;
+        border: 1px solid #b9b1b1;
+      }
+      .form-control{
+        background: #fff;
+      }
+    }
 
     .active-icon{
       display: none;
@@ -416,9 +426,9 @@
   max-width:150px;
 }
 
-@media (min-width: 1200px){
+@media (min-width: 1350px){
   .container-xl, .container-lg, .container-md, .container-sm, .container {
-    max-width: 1270px;
+    max-width: 1350px;
   }
 }
 
@@ -426,7 +436,7 @@
   border: 2px solid #ddd;
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 2px 6px #cee9fe;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.06);
   margin-bottom:20px;
   background-color: #fff;
   padding:15px;
@@ -442,5 +452,42 @@
 .form-group{
   &-email{
     display: none;
+  }
+}
+
+.product{
+  &-regular{
+    &-wrapper{
+      .row{
+        .product-single-box{
+          &:nth-child(odd){
+            .product-single{
+              background-color: $color-item-box1;
+              border-color: $color-item-box1-border;
+              .product-quantity .btn-icon{
+                //background-color: $color-item-box-quantity;
+                //border-color: #b9b5b5;
+              }
+              .product-quantity .form-control{
+                //border-color: #b9b5b5;
+                //background-color: transparent;
+              }
+              &.style-3{
+                &.active{
+                  border-color:#018d5b;
+                }
+              }
+            }
+          }
+        }
+
+      }
+    }
+  }
+}
+
+.email-address-field{
+  &.invalid{
+    border:2px solid #a92834;
   }
 }

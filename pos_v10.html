@@ -8,7 +8,7 @@
     <link rel="icon" href="assets/images/favicon_isna.png">
 
     <link rel="stylesheet" href="assets/css/bootstrap-custom.css">
-    <link rel="stylesheet" href="assets/css/style.css?v=1.0.11">
+    <link rel="stylesheet" href="assets/css/style.css?v=1.0.12">
 
 </head>
 <body>
@@ -226,10 +226,12 @@
                                 <div class="sidebar-footer-top">
                                     <div class="voucher-block">
                                         <div class="input-group p-3">
-                                            <input type="number" class="form-control voucher-field-js" name="CouponCode" placeholder="Discount Amount" data-type="solid">
-                                            <div class="input-group-append">
-                                                <button type="button" class="btn btn-black input-group-text btn-apply-voucher-js">Apply</button>
+                                            <div class="input-group-prepend">
+                                                <span>Discount:</span>
+                                                <span class="currency-sign"><img src="assets/images/dollar-symbol.png"> </span>
                                             </div>
+                                            <input type="number" class="form-control voucher-field-js" name="CouponCode" placeholder="Amount" data-type="solid">
+
                                         </div>
                                     </div>
                                     <div class="summary-box">
@@ -421,6 +423,58 @@
     </div>
 </div>
 
+<!-- PAYMENT CONFIRMATION POPUP -->
+<div class="popup-modal-wrapper popup-modal-js popup-modal-small" id="popup-confirmation">
+    <div class="popup-modal-outer">
+        <div class="popup-modal">
+            <div class="popup-modal-head">
+                <h2 class="m-0 popup-modal-head-title">Payment Confirmation</h2>
+                <button type="button" class="btn btn-transparent btn-blank btn-icon btn-close-popup-js">
+                    <img src="assets/images/close_white.png" alt="close">
+                </button>
+            </div>
+
+            <div class="popup-modal-body">
+                <p class="text-title font-semibold">You are about to authorize $350</p>
+            </div>
+
+            <div class="popup-modal-foot">
+                <div class="text-right">
+                    <button type="button" class="btn btn-black btn-close-popup-js mr-10">No</button>
+                    <button type="button" class="btn btn-success">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- PURCHASE SUCCESS POPUP -->
+<div class="popup-modal-wrapper popup-modal-js popup-modal-small popup-modal-headless" id="popup-success">
+    <div class="popup-modal-outer">
+        <div class="popup-modal">
+            <div class="popup-modal-head">
+                <h2 class="m-0 popup-modal-head-title"></h2>
+                <button type="button" class="btn btn-transparent btn-blank btn-icon btn-close-popup-js">
+                    <img src="assets/images/close_white.png" alt="close">
+                </button>
+            </div>
+
+            <div class="popup-modal-body">
+                <div class="text-center">
+                    <img src="assets/images/check-mark_70.png">
+                </div>
+                <p class="text-title font-semibold text-center mt-10">Item(s) has been purchased.</p>
+                <div class="info-card mb-0 mt-20">
+                    <p><strong>Bill Number: </strong> 45245415 </p>
+                    <p><strong>Invoice Number: </strong> 45245415 </p>
+                    <p class="m-0"><strong>Charged Amount: </strong> <span>$</span>520 </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
 <div class="body-overlay body-overlay-js"></div>
 
 <!-- LOADER -->
@@ -447,6 +501,9 @@
         {name:'Chaplaincy Training (Includes Lunch)', price:'79', key:'60BABEEA-9EFE-43CD-9FFF-B2B9C8B9043E', productCategory:'chaplaincy'}
     ];
 </script>
-<script src="assets/js/custom.js?v=1.0.11"></script>
+
+<!--<script src="assets/js/custom.js?v=1.0.11"></script>-->
+<script src="assets/js/live/custom.js?v=1.0.0"></script>
+
 </body>
 </html>
