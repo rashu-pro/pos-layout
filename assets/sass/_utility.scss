@@ -228,8 +228,15 @@ $less-gutter-amount-small: 7.5px;
 }
 
 /*
-5. TEXT STYLES
+6. TEXT STYLES
  ------------------------*/
 .text-medium{
   font-size: $font-body-medium;
+}
+
+/*
+7. FLEX UTILITIES
+ ------------------------*/
+.flex-none{
+  flex:none;
 }

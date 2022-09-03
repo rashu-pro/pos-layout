@@ -15,7 +15,7 @@
   }
 
   &-head{
-    padding: 15px;
+    padding: 10px 15px;
     border-bottom: 1px solid #ddd;
     margin-bottom: 19px;
     margin: 0 -15px 20px -15px;
@@ -66,6 +66,7 @@
     //box-shadow: 0 2px 6px #cee9fe;
     margin-bottom:20px;
     background-color: $color-item-box;
+    min-height:132px;
 
     .product-quantity{
       .btn-icon{
@@ -174,7 +175,9 @@
       }
 
       &.active{
-        border-color:$color-success;
+        border-color:$color-success!important;
+        border-bottom-width: 4px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
         .active-icon{
           display: block;
           &-holder{
@@ -293,10 +296,13 @@
           &-icon{
             width:42px;
             height:42px;
+            background-color: #e9ecef;
+            border-color: #808080;
           }
         }
         .form-control{
           width:80px;
+          border-color:#808080;
         }
       }
     }
@@ -369,6 +375,7 @@
 
     @media (min-width:576px){
       border:1px solid #ddd;
+      border-top:0;
     }
   }
 }
@@ -533,7 +540,10 @@
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.06);
   margin-bottom:20px;
   background-color: #fff;
-  padding:15px;
+  padding:15px 20px;
+  .form-group{
+    margin-bottom:6px;
+  }
 }
 
 .info-card{

@@ -253,10 +253,17 @@ body {
 }
 
 /*
-5. TEXT STYLES
+6. TEXT STYLES
  ------------------------*/
 .text-medium {
   font-size: 18px;
+}
+
+/*
+7. FLEX UTILITIES
+ ------------------------*/
+.flex-none {
+  flex: none;
 }
 
 .loader-div {
@@ -871,7 +878,7 @@ body {
   height: 100%;
 }
 .sidebar-title-holder {
-  padding: 15px;
+  padding: 15px 15px;
   border-bottom: 1px solid #ddd;
 }
 .sidebar-footer {
@@ -905,6 +912,9 @@ body {
     z-index: 9;
     right: unset;
     transform: none;
+  }
+  .sidebar-title-holder {
+    padding: 19px 15px;
   }
 }
 @media (min-width: 992px) {
@@ -987,7 +997,7 @@ select {
 }
 .form-group .warning-message {
   position: absolute;
-  bottom: -26px;
+  bottom: -19px;
   right: 0;
 }
 
@@ -1010,13 +1020,13 @@ input[type=number] {
 .warning-message {
   margin: 0;
   font-size: 14px;
-  line-height: 1.2;
   color: #721c24;
   background-color: #f8d7da;
   border-color: #f5c6cb;
-  padding: 2px 8px;
-  border-radius: 6px;
+  padding: 0px 5px;
+  border-radius: 2px;
   box-shadow: 0 0 2px;
+  line-height: 1;
 }
 
 .bounce {
@@ -1155,7 +1165,7 @@ input[type=number] {
   padding: 0;
 }
 .main-body-head {
-  padding: 15px;
+  padding: 10px 15px;
   border-bottom: 1px solid #ddd;
   margin-bottom: 19px;
   margin: 0 -15px 20px -15px;
@@ -1192,6 +1202,7 @@ input[type=number] {
   overflow: hidden;
   margin-bottom: 20px;
   background-color: #fff3cd;
+  min-height: 132px;
 }
 .product-single .product-quantity .btn-icon {
   background-color: #f6f6f6;
@@ -1270,7 +1281,9 @@ input[type=number] {
   }
 }
 .product-single.style-3.active {
-  border-color: #018d5b;
+  border-color: #018d5b !important;
+  border-bottom-width: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
 }
 .product-single.style-3.active .active-icon {
   display: block;
@@ -1371,9 +1384,12 @@ input[type=number] {
 .product-custom .product-quantity .btn-icon {
   width: 42px;
   height: 42px;
+  background-color: #e9ecef;
+  border-color: #808080;
 }
 .product-custom .product-quantity .form-control {
   width: 80px;
+  border-color: #808080;
 }
 @media (min-width: 768px) {
   .product-custom .form-control {
@@ -1432,6 +1448,7 @@ input[type=number] {
 @media (min-width: 576px) {
   .container-main {
     border: 1px solid #ddd;
+    border-top: 0;
   }
 }
 
@@ -1584,7 +1601,10 @@ input[type=number] {
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.06);
   margin-bottom: 20px;
   background-color: #fff;
-  padding: 15px;
+  padding: 15px 20px;
+}
+.item-box .form-group {
+  margin-bottom: 6px;
 }
 
 .info-card {

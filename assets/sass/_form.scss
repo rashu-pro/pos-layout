@@ -19,7 +19,7 @@ select{
     position: relative;
     .warning-message{
       position: absolute;
-      bottom: -26px;
+      bottom: -19px;
       right:0;
     }
   }
@@ -48,11 +48,11 @@ input[type=number] {
 .warning-message{
   margin: 0;
   font-size: 14px;
-  line-height: 1.2;
   color: #721c24;
   background-color: #f8d7da;
   border-color: #f5c6cb;
-  padding: 2px 8px;
-  border-radius: 6px;
-  box-shadow:0 0 2px;
+  padding: 0px 5px;
+  border-radius: 2px;
+  box-shadow: 0 0 2px;
+  line-height: 1;
 }
