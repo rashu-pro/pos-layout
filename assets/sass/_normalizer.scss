@@ -4,4 +4,7 @@ body{
   font-size:16px;
   line-height: 1.4;
   box-sizing: border-box;
+  @media (min-width: $responsive-breakpoint){
+    font-size:18px;
+  }
 }

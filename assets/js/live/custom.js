@@ -21,6 +21,17 @@ $('.ticket-category-title-js').html(selectedOption.text());
 loadProducts(itemCategory);
 isProductSelected();
 
+//=== ON SCROLL FUNCTION
+$(window).on('scroll', function (e) {
+    let self = $(this);
+    if(self.scrollTop()>$('header.header').height()){
+        $('.sidebar-js').addClass('sidebar-top');
+    }else{
+        $('.sidebar-js').removeClass('sidebar-top');
+    }
+
+});
+
 //=== ON TICKET CATEGORY CHANGE
 $(document).on('change', '.ticket-category-js', function () {
     let self = $(this),
@@ -256,7 +267,7 @@ $(document).on('click', '.btn-checkout-js', function (e) {
     }
 
     //=== WHEN EMAIL FIELD IS INVALID
-    if($('#is-email').is(':checked') && !$('.email-address-field').hasClass('valid')){
+    if($('#is-email').is(':checked') && !emailValidationRegex.test($('.email-address-field').val())){
         $('.email-address-field').focus();
         $('.email-address-field').parent().find('.warning-message').eq(0).remove();
         $('.email-address-field').parent().append('<p class="warning-message text-danger">Invalid email address!</p>');
@@ -271,6 +282,7 @@ $(document).on('click', '.btn-checkout-js', function (e) {
 $(document).on('click', '.btn-close-popup-js', function (e) {
     e.preventDefault();
     $(this).closest('.popup-modal-js').hide();
+    $('.loader-div').removeClass('active');
 });
 
 //=== ACTIONS AFTER CARD SWIPED
@@ -299,22 +311,15 @@ $(document).on('click', '.btn-close-popup-js', function (e) {
 //    $('#popup-cc-error').show();
 //});
 
-
-//=== KEYUP, FOCUS, BLUR, KEYPRESS ACTION
 //=== REGULAR PRODUCT ITEM QUANTITY CHANGE ACTION
 $(document).on('keyup focus blur', '.product-single .item-quantity', function (e) {
     let self = $(this);
     if (!parseFloat(self.val()) > 0) {
         self.val(0);
-        self.closest('.product-single').removeClass('active');
     }
     addItemToCart(self, $('.cart-item-list'));
     calculateTotal();
     calculateGrandTotal();
-
-    if(parseFloat(self.val()) > 0){
-        self.closest('.product-single').addClass('active');
-    }
 });
 
 //=== CART ITEM ITEM QUANTITY CHANGE ACTION
@@ -363,63 +368,6 @@ $(document).on('keyup focus blur', '.form-group .form-control', function (e) {
     }
 });
 
-$(document).on('keyup', '.voucher-field-js', function (e) {
-    let self = $(this),
-        voucherField = self,
-        subtotal = parseFloat($('.subtotal-js').text()),
-        discountAmount = 0,
-        discountSign = '';
-
-    if (self.val() !== '') {
-        self.closest('.voucher-block').find('.warning-message').remove();
-    }
-
-    if(voucherField.data('type')==='solid'){
-        if(voucherField.val()==''){
-            errorLoad(self, 'Invalid discount!');
-        }
-
-        if(voucherField.val()<1){
-            errorLoad(self, 'Invalid discount!');
-        }
-
-        if(parseFloat(voucherField.val())>subtotal){
-            errorLoad(self, 'Invalid discount!');
-            e.preventDefault();
-            discountAmount = 0;
-            $('.discount-js').html(discountAmount);
-            $('.discount-amount-name-js').val(discountAmount);
-            calculateGrandTotal();
-            return false;
-        }
-        discountAmount = parseFloat(voucherField.val())? parseFloat(voucherField.val()): 0;
-    }else{
-        let object = couponCodes.find(obj=>obj.name===voucherField.val());
-        if(!object){
-            errorLoad(self, 'Wrong coupon code!');
-            return;
-        }
-        discountAmount = object.discount;
-        if(object.calculateMethod==='percentage'){
-            discountSign = '%';
-            discountAmount = (parseFloat(object.discount)*subtotal)/100;
-        }
-        $('.discount-code-name-js').val(object.discount);
-        $('.discount-note-js').html('<span class="currency">$</span><span>'+object.discount+'</span><span>'+discountSign+'</span>');
-    }
-
-    $('.discount-js').html(discountAmount);
-    $('.discount-amount-name-js').val(discountAmount);
-    calculateGrandTotal();
-});
-
-$(document).on('blur', '.voucher-field-js', function (e) {
-    let self = $(this);
-    if(self.val()==''){
-        self.closest('.voucher-block').find('.warning-message').remove();
-    }
-});
-
 //=== ADDIN ITEM TO THE CART IF ANY ITEMS SELECTED ON DOCUMENT READY
 $('.products-wrapper .product-single').each(function (i, element) {
     if ($(element).find('.item-quantity').val() > 0) {
@@ -428,6 +376,946 @@ $('.products-wrapper .product-single').each(function (i, element) {
         calculateGrandTotal();
         $(element).addClass('active');
     }
+});
+
+// $(document).on('keyup', '.voucher-field-js', function (e) {
+//     let self = $(this),
+//         voucherField = self,
+//         subtotal = parseFloat($('.subtotal-js').text()),
+//         discountAmount = 0,
+//         discountSign = '';
+//
+//     if (self.val() !== '') {
+//         self.closest('.voucher-block').find('.warning-message').remove();
+//     }
+//
+//     if(voucherField.data('type')==='solid'){
+//         if(voucherField.val()==''){
+//             errorLoad(self, 'Invalid discount!');
+//         }
+//
+//         if(voucherField.val()<1){
+//             errorLoad(self, 'Invalid discount!');
+//         }
+//
+//         if(parseFloat(voucherField.val())>subtotal){
+//             errorLoad(self, 'Invalid discount!');
+//             e.preventDefault();
+//             discountAmount = 0;
+//             $('.discount-js').html(discountAmount);
+//             $('.discount-amount-name-js').val(discountAmount);
+//             calculateGrandTotal();
+//             return false;
+//         }
+//         discountAmount = parseFloat(voucherField.val())? parseFloat(voucherField.val()): 0;
+//     }else{
+//         let object = couponCodes.find(obj=>obj.name===voucherField.val());
+//         if(!object){
+//             errorLoad(self, 'Wrong coupon code!');
+//             return;
+//         }
+//         discountAmount = object.discount;
+//         if(object.calculateMethod==='percentage'){
+//             discountSign = '%';
+//             discountAmount = (parseFloat(object.discount)*subtotal)/100;
+//         }
+//         $('.discount-code-name-js').val(object.discount);
+//         $('.discount-note-js').html('<span class="currency">$</span><span>'+object.discount+'</span><span>'+discountSign+'</span>');
+//     }
+//
+//     $('.discount-js').html(discountAmount);
+//     $('.discount-amount-name-js').val(discountAmount);
+//     calculateGrandTotal();
+// });
+//
+//
+//
+// $(document).on('blur', '.voucher-field-js', function (e) {
+//     let self = $(this);
+//     if(self.val()==''){
+//         self.closest('.voucher-block').find('.warning-message').remove();
+//     }
+// });
+
+//=== COUPON APPLY BUTTON CLICK
+$(document).on('click', '.btn-apply-voucher-js', function (e) {
+    e.preventDefault();
+    let self = $(this),
+        voucherField = $('.voucher-field-js'),
+        subtotal = parseFloat($('.subtotal-js').text()),
+        discountAmount = 0,
+        discountSign = '';
+
+    if (subtotal < 1) {
+        errorLoad(self, 'Add an item first!');
+        return;
+    }
+
+    if (voucherField.val() === '') {
+        voucherField.focus();
+        return;
+    }
+
+    if (voucherField.data('type') === 'solid') {
+        if (voucherField.val() < 1) {
+            errorLoad(self, 'Invalid discount!');
+            voucherField.val(0);
+            discountAmount = parseFloat(voucherField.val());
+            $('.discount-js').html(discountAmount);
+            $('.discount-amount-name-js').val(discountAmount);
+            calculateGrandTotal();
+            return;
+        }
+
+        if (parseFloat(voucherField.val()) > subtotal) {
+            errorLoad(self, 'Invalid discount!');
+            voucherField.val(0);
+            discountAmount = parseFloat(voucherField.val());
+            $('.discount-js').html(discountAmount);
+            $('.discount-amount-name-js').val(discountAmount);
+            calculateGrandTotal();
+            return;
+        }
+        discountAmount = parseFloat(voucherField.val());
+    } else {
+        let object = couponCodes.find(obj => obj.name === voucherField.val());
+        if (!object) {
+            errorLoad(self, 'Wrong coupon code!');
+            return;
+        }
+        discountAmount = object.discount;
+        if (object.calculateMethod === 'percentage') {
+            discountSign = '%';
+            discountAmount = (parseFloat(object.discount) * subtotal) / 100;
+        }
+        $('.discount-code-name-js').val(object.discount);
+        $('.discount-note-js').html('<span class="currency">$</span><span>' + object.discount + '</span><span>' + discountSign + '</span>');
+    }
+
+    $('.discount-js').html(discountAmount);
+    $('.discount-amount-name-js').val(discountAmount);
+    calculateGrandTotal();
+});
+
+
+//======== KEYBOARD PLUGIN CALL
+$(document).on('focus', '.vr-keyboard', function () {
+    let self = $(this);
+    self.keyboard({
+        // *** choose layout ***
+        layout       : 'custom',
+        customLayout : { 'normal': ['1 2 3 4 5 6 7 8 9 0',
+            'q w e r t y u i o p',
+            'a s d f g h j k l',
+            'z x c v b n m {b} {clear:clear}',
+            '{c} @ {space} . @gmail .com {a}'
+        ] },
+
+        // allow jQuery position utility to reposition the keyboard on window resize
+        reposition : true,
+
+        // preview added above keyboard if true, original input/textarea used if false
+        // always disabled for contenteditable elements
+        usePreview : true,
+
+        // if true, the keyboard will always be visible
+        alwaysOpen : false,
+
+        // give the preview initial focus when the keyboard becomes visible
+        initialFocus : true,
+        // Avoid focusing the input the keyboard is attached to
+        noFocus : false,
+
+        // if true, keyboard will remain open even if the input loses focus.
+        stayOpen : false,
+
+        // Prevents the keyboard from closing when the user clicks or
+        // presses outside the keyboard. The `autoAccept` option must
+        // also be set to true when this option is true or changes are lost
+        userClosed : false,
+
+        // if true, keyboard will not close if you press escape.
+        ignoreEsc : false,
+
+        // if true, keyboard will only closed on click event instead of mousedown or
+        // touchstart. The user can scroll the page without closing the keyboard.
+        closeByClickEvent : false,
+
+        // *** change keyboard language & look ***
+        display : {
+            // \u2714 = check mark - same action as accept
+            'a'      : '\u2714:Accept (Shift-Enter)',
+            'accept' : 'Accept:Accept (Shift-Enter)',
+            'alt'    : 'AltGr:Alternate Graphemes',
+            // \u232b = outlined left arrow with x inside
+            'b'      : '\u232b:Backspace',
+            'bksp'   : 'Bksp:Backspace',
+            // \u2716 = big X, close - same action as cancel
+            'c'      : '\u2716:Cancel (Esc)',
+            'cancel' : 'Cancel:Cancel (Esc)',
+            // clear num pad
+            'clear'  : 'C:Clear',
+            'combo'  : '\u00f6:Toggle Combo Keys',
+            // decimal point for num pad (optional);
+            // change '.' to ',' for European format
+            'dec'    : '.:Decimal',
+            // down, then left arrow - enter symbol
+            'e'      : '\u21b5:Enter',
+            'empty'  : '\u00a0', // &nbsp;
+            'enter'  : 'Enter:Enter',
+            // \u2190 = left arrow (move caret)
+            'left'   : '\u2190',
+            // caps lock
+            'lock'   : '\u21ea Lock:Caps Lock',
+            'next'   : 'Next',
+            'prev'   : 'Prev',
+            // \u2192 = right arrow (move caret)
+            'right'  : '\u2192',
+            // \u21e7 = thick hollow up arrow
+            's'      : '\u21e7:Shift',
+            'shift'  : 'Shift:Shift',
+            // \u00b1 = +/- sign for num pad
+            'sign'   : '\u00b1:Change Sign',
+            'space'  : '&nbsp;:Space',
+
+            // \u21e5 = right arrow to bar; used since this virtual
+            // keyboard works with one directional tabs
+            't'      : '\u21e5:Tab',
+            // \u21b9 is the true tab symbol (left & right arrows)
+            'tab'    : '\u21e5 Tab:Tab',
+            // replaced by an image
+            'toggle' : ' ',
+
+            // added to titles of keys
+            // accept key status when acceptValid:true
+            'valid': 'valid',
+            'invalid': 'invalid',
+            // combo key states
+            'active': 'active',
+            'disabled': 'disabled'
+        },
+
+        // Message added to the key title while hovering, if the mousewheel plugin exists
+        wheelMessage : 'Use mousewheel to see other keys',
+
+        css : {
+            // input & preview
+            input          : 'ui-widget-content ui-corner-all',
+            // keyboard container
+            container      : 'ui-widget-content ui-widget ui-corner-all ui-helper-clearfix',
+            // keyboard container extra class (same as container, but separate)
+            popup: '',
+            // default state
+            buttonDefault  : 'ui-state-default ui-corner-all',
+            // hovered button
+            buttonHover    : 'ui-state-hover',
+            // Action keys (e.g. Accept, Cancel, Tab, etc); this replaces the "actionClass" option
+            buttonAction   : 'ui-state-active',
+            // Active keys (e.g. shift down, meta keyset active, combo keys active)
+            buttonActive   : 'ui-state-active',
+            // used when disabling the decimal button {dec}
+            buttonDisabled : 'ui-state-disabled',
+            // empty button class name {empty}
+            buttonEmpty    : 'ui-keyboard-empty'
+        },
+
+        // *** Useability ***
+        // Auto-accept content when clicking outside the keyboard (popup will close)
+        autoAccept : true,
+        // Auto-accept content even if the user presses escape
+        // (only works if `autoAccept` is `true`)
+        autoAcceptOnEsc : false,
+
+        // Prevents direct input in the preview window when true
+        lockInput : false,
+
+        // Prevent keys not in the displayed keyboard from being typed in
+        restrictInput : false,
+        // Additional allowed characters while restrictInput is true
+        restrictInclude : '', // e.g. 'a b foo \ud83d\ude38'
+
+        // Check input against validate function, if valid the accept button
+        // is clickable; if invalid, the accept button is disabled.
+        acceptValid : true,
+        // Auto-accept when input is valid; requires `acceptValid`
+        // set `true` & validate callback
+        autoAcceptOnValid : false,
+
+        // if acceptValid is true & the validate function returns a false, this option
+        // will cancel a keyboard close only after the accept button is pressed
+        cancelClose : true,
+
+        // Use tab to navigate between input fields
+        tabNavigation : false,
+
+        // press enter (shift-enter in textarea) to go to the next input field
+        enterNavigation : true,
+        // mod key options: 'ctrlKey', 'shiftKey', 'altKey', 'metaKey' (MAC only)
+        // alt-enter to go to previous; shift-alt-enter to accept & go to previous
+        enterMod : 'altKey',
+
+        // if true, the next button will stop on the last keyboard input/textarea;
+        // prev button stops at first
+        // if false, the next button will wrap to target the first input/textarea;
+        // prev will go to the last
+        stopAtEnd : true,
+
+        // Set this to append the keyboard immediately after the input/textarea it
+        // is attached to. This option works best when the input container doesn't
+        // have a set width and when the "tabNavigation" option is true
+        appendLocally : false,
+
+        // Append the keyboard to a desired element. This can be a jQuery selector
+        // string or object
+        appendTo : 'body',
+
+        // If false, the shift key will remain active until the next key is (mouse)
+        // clicked on; if true it will stay active until pressed again
+        stickyShift : true,
+
+        // caret placed at the end of any text when keyboard becomes visible
+        caretToEnd : false,
+
+        // Prevent pasting content into the area
+        preventPaste : false,
+
+        // caret stays this many pixels from the edge of the input
+        // while scrolling left/right; use "c" or "center" to center
+        // the caret while scrolling
+        scrollAdjustment : 10,
+
+        // Set the max number of characters allowed in the input, setting it to
+        // false disables this option
+        maxLength : false,
+
+        // allow inserting characters @ caret when maxLength is set
+        maxInsert : true,
+
+        // Mouse repeat delay - when clicking/touching a virtual keyboard key, after
+        // this delay the key will start repeating
+        repeatDelay : 500,
+
+        // Mouse repeat rate - after the repeatDelay, this is the rate (characters
+        // per second) at which the key is repeated. Added to simulate holding down
+        // a real keyboard key and having it repeat. I haven't calculated the upper
+        // limit of this rate, but it is limited to how fast the javascript can
+        // process the keys. And for me, in Firefox, it's around 20.
+        repeatRate : 20,
+
+        // resets the keyboard to the default keyset when visible
+        resetDefault : false,
+
+        // Event (namespaced) on the input to reveal the keyboard. To disable it,
+        // just set it to an empty string ''.
+        openOn : 'focus',
+
+        // When the character is added to the input
+        keyBinding : 'mousedown touchstart',
+
+        // enable/disable mousewheel functionality
+        // enabling still depends on the mousewheel plugin
+        useWheel : true,
+
+        // combos (emulate dead keys)
+        // http://en.wikipedia.org/wiki/Keyboard_layout#US-International
+        // if user inputs `a the script converts it to à, ^o becomes ô, etc.
+        useCombos : true,
+
+        // *** Methods ***
+        // Callbacks - add code inside any of these callback functions as desired
+        initialized   : function(e, keyboard, el) {},
+        beforeVisible : function(e, keyboard, el) {
+            $('body').addClass('vk-attached');
+        },
+        visible       : function(e, keyboard, el) {},
+        beforeInsert  : function(e, keyboard, el, textToAdd) { return textToAdd; },
+        change        : function(e, keyboard, el) {},
+        beforeClose   : function(e, keyboard, el, accepted) {},
+        accepted      : function(e, keyboard, el) {},
+        canceled      : function(e, keyboard, el) {},
+        restricted    : function(e, keyboard, el) {},
+        hidden        : function(e, keyboard, el) {
+            $('body').removeClass('vk-attached');
+        },
+
+        // called instead of base.switchInput
+        switchInput : function(keyboard, goToNext, isAccepted) {},
+
+        // used if you want to create a custom layout or modify the built-in keyboard
+        // create : function(keyboard) { return keyboard.buildKeyboard(); },
+
+        // build key callback (individual keys)
+        buildKey : function( keyboard, data ) {
+            return data;
+        },
+
+        // this callback is called just before the "beforeClose" to check the value
+        // if the value is valid, return true and the keyboard will continue as it
+        // should (close if not always open, etc)
+        // if the value is not value, return false and the clear the keyboard value
+        // ( like this "keyboard.$preview.val('');" ), if desired
+        // The validate function is called after each input, the "isClosing" value
+        // will be false; when the accept button is clicked, "isClosing" is true
+        validate : function(keyboard, value, isClosing) {
+            return true;
+        }
+
+    });
+
+});
+
+$(document).on('focus', '.vr-keyboard-num', function () {
+    let self = $(this);
+    self.keyboard({
+        // *** choose layout ***
+        layout       : 'custom',
+        customLayout : { 'normal'  : ['7 8 9 {b}', '4 5 6 {clear}', '0 1 2 3', '{c} {a}']},
+
+        // allow jQuery position utility to reposition the keyboard on window resize
+        reposition : true,
+
+        // preview added above keyboard if true, original input/textarea used if false
+        // always disabled for contenteditable elements
+        usePreview : true,
+
+        // if true, the keyboard will always be visible
+        alwaysOpen : false,
+
+        // give the preview initial focus when the keyboard becomes visible
+        initialFocus : true,
+        // Avoid focusing the input the keyboard is attached to
+        noFocus : false,
+
+        // if true, keyboard will remain open even if the input loses focus.
+        stayOpen : false,
+
+        // Prevents the keyboard from closing when the user clicks or
+        // presses outside the keyboard. The `autoAccept` option must
+        // also be set to true when this option is true or changes are lost
+        userClosed : false,
+
+        // if true, keyboard will not close if you press escape.
+        ignoreEsc : false,
+
+        // if true, keyboard will only closed on click event instead of mousedown or
+        // touchstart. The user can scroll the page without closing the keyboard.
+        closeByClickEvent : false,
+
+        // *** change keyboard language & look ***
+        display : {
+            // \u2714 = check mark - same action as accept
+            'a'      : '\u2714:Accept (Shift-Enter)',
+            'accept' : 'Accept:Accept (Shift-Enter)',
+            'alt'    : 'AltGr:Alternate Graphemes',
+            // \u232b = outlined left arrow with x inside
+            'b'      : '\u232b:Backspace',
+            'bksp'   : 'Bksp:Backspace',
+            // \u2716 = big X, close - same action as cancel
+            'c'      : '\u2716:Cancel (Esc)',
+            'cancel' : 'Cancel:Cancel (Esc)',
+            // clear num pad
+            'clear'  : 'C:Clear',
+            'combo'  : '\u00f6:Toggle Combo Keys',
+            // decimal point for num pad (optional);
+            // change '.' to ',' for European format
+            'dec'    : '.:Decimal',
+            // down, then left arrow - enter symbol
+            'e'      : '\u21b5:Enter',
+            'empty'  : '\u00a0', // &nbsp;
+            'enter'  : 'Enter:Enter',
+            // \u2190 = left arrow (move caret)
+            'left'   : '\u2190',
+            // caps lock
+            'lock'   : '\u21ea Lock:Caps Lock',
+            'next'   : 'Next',
+            'prev'   : 'Prev',
+            // \u2192 = right arrow (move caret)
+            'right'  : '\u2192',
+            // \u21e7 = thick hollow up arrow
+            's'      : '\u21e7:Shift',
+            'shift'  : 'Shift:Shift',
+            // \u00b1 = +/- sign for num pad
+            'sign'   : '\u00b1:Change Sign',
+            'space'  : '&nbsp;:Space',
+
+            // \u21e5 = right arrow to bar; used since this virtual
+            // keyboard works with one directional tabs
+            't'      : '\u21e5:Tab',
+            // \u21b9 is the true tab symbol (left & right arrows)
+            'tab'    : '\u21e5 Tab:Tab',
+            // replaced by an image
+            'toggle' : ' ',
+
+            // added to titles of keys
+            // accept key status when acceptValid:true
+            'valid': 'valid',
+            'invalid': 'invalid',
+            // combo key states
+            'active': 'active',
+            'disabled': 'disabled'
+        },
+
+        // Message added to the key title while hovering, if the mousewheel plugin exists
+        wheelMessage : 'Use mousewheel to see other keys',
+
+        css : {
+            // input & preview
+            input          : 'ui-widget-content ui-corner-all',
+            // keyboard container
+            container      : 'ui-widget-content ui-widget ui-corner-all ui-helper-clearfix',
+            // keyboard container extra class (same as container, but separate)
+            popup: '',
+            // default state
+            buttonDefault  : 'ui-state-default ui-corner-all',
+            // hovered button
+            buttonHover    : 'ui-state-hover',
+            // Action keys (e.g. Accept, Cancel, Tab, etc); this replaces the "actionClass" option
+            buttonAction   : 'ui-state-active',
+            // Active keys (e.g. shift down, meta keyset active, combo keys active)
+            buttonActive   : 'ui-state-active',
+            // used when disabling the decimal button {dec}
+            buttonDisabled : 'ui-state-disabled',
+            // empty button class name {empty}
+            buttonEmpty    : 'ui-keyboard-empty'
+        },
+
+        // *** Useability ***
+        // Auto-accept content when clicking outside the keyboard (popup will close)
+        autoAccept: true,
+        // Auto-accept content even if the user presses escape
+        // (only works if `autoAccept` is `true`)
+        autoAcceptOnEsc : false,
+
+        // Prevents direct input in the preview window when true
+        lockInput : false,
+
+        // Prevent keys not in the displayed keyboard from being typed in
+        restrictInput : false,
+        // Additional allowed characters while restrictInput is true
+        restrictInclude : '', // e.g. 'a b foo \ud83d\ude38'
+
+        // Check input against validate function, if valid the accept button
+        // is clickable; if invalid, the accept button is disabled.
+        acceptValid : true,
+        // Auto-accept when input is valid; requires `acceptValid`
+        // set `true` & validate callback
+        autoAcceptOnValid : false,
+
+        // if acceptValid is true & the validate function returns a false, this option
+        // will cancel a keyboard close only after the accept button is pressed
+        cancelClose : true,
+
+        // Use tab to navigate between input fields
+        tabNavigation : false,
+
+        // press enter (shift-enter in textarea) to go to the next input field
+        enterNavigation : true,
+        // mod key options: 'ctrlKey', 'shiftKey', 'altKey', 'metaKey' (MAC only)
+        // alt-enter to go to previous; shift-alt-enter to accept & go to previous
+        enterMod : 'altKey',
+
+        // if true, the next button will stop on the last keyboard input/textarea;
+        // prev button stops at first
+        // if false, the next button will wrap to target the first input/textarea;
+        // prev will go to the last
+        stopAtEnd : true,
+
+        // Set this to append the keyboard immediately after the input/textarea it
+        // is attached to. This option works best when the input container doesn't
+        // have a set width and when the "tabNavigation" option is true
+        appendLocally : false,
+
+        // Append the keyboard to a desired element. This can be a jQuery selector
+        // string or object
+        appendTo : 'body',
+
+        // If false, the shift key will remain active until the next key is (mouse)
+        // clicked on; if true it will stay active until pressed again
+        stickyShift : true,
+
+        // caret placed at the end of any text when keyboard becomes visible
+        caretToEnd : false,
+
+        // Prevent pasting content into the area
+        preventPaste : false,
+
+        // caret stays this many pixels from the edge of the input
+        // while scrolling left/right; use "c" or "center" to center
+        // the caret while scrolling
+        scrollAdjustment : 10,
+
+        // Set the max number of characters allowed in the input, setting it to
+        // false disables this option
+        maxLength : 16,
+
+        // allow inserting characters @ caret when maxLength is set
+        maxInsert : true,
+
+        // Mouse repeat delay - when clicking/touching a virtual keyboard key, after
+        // this delay the key will start repeating
+        repeatDelay : 500,
+
+        // Mouse repeat rate - after the repeatDelay, this is the rate (characters
+        // per second) at which the key is repeated. Added to simulate holding down
+        // a real keyboard key and having it repeat. I haven't calculated the upper
+        // limit of this rate, but it is limited to how fast the javascript can
+        // process the keys. And for me, in Firefox, it's around 20.
+        repeatRate : 20,
+
+        // resets the keyboard to the default keyset when visible
+        resetDefault : false,
+
+        // Event (namespaced) on the input to reveal the keyboard. To disable it,
+        // just set it to an empty string ''.
+        openOn : 'focus',
+
+        // When the character is added to the input
+        keyBinding : 'mousedown touchstart',
+
+        // enable/disable mousewheel functionality
+        // enabling still depends on the mousewheel plugin
+        useWheel : true,
+
+        // combos (emulate dead keys)
+        // http://en.wikipedia.org/wiki/Keyboard_layout#US-International
+        // if user inputs `a the script converts it to à, ^o becomes ô, etc.
+        useCombos : true,
+
+        // *** Methods ***
+        // Callbacks - add code inside any of these callback functions as desired
+        initialized   : function(e, keyboard, el) {},
+        beforeVisible : function(e, keyboard, el) {
+            $('body').addClass('vk-attached');
+        },
+        visible       : function(e, keyboard, el) {},
+        beforeInsert  : function(e, keyboard, el, textToAdd) { return textToAdd; },
+        change        : function(e, keyboard, el) {},
+        beforeClose: function (e, keyboard, el, accepted) {
+            if ($('.donation-details').css('display') == 'block') {
+                let otherAmount = $('#other-amount-btn').val();
+                $('#txtAmount').val(otherAmount);
+            }
+            el.focus();
+        },
+        accepted: function (e, keyboard, el) {},
+        canceled: function (e, keyboard, el) {
+
+        },
+        restricted    : function(e, keyboard, el) {},
+        hidden        : function(e, keyboard, el) {
+            $('body').removeClass('vk-attached');
+            if ($('.donation-details').css('display') == 'block') {
+                var otherAmount =  $('#other-amount-btn').val();
+                $('#txtAmount').val(otherAmount);
+            }
+        },
+
+        // called instead of base.switchInput
+        switchInput : function(keyboard, goToNext, isAccepted) {},
+
+        // used if you want to create a custom layout or modify the built-in keyboard
+        // create : function(keyboard) { return keyboard.buildKeyboard(); },
+
+        // build key callback (individual keys)
+        buildKey : function( keyboard, data ) {
+            return data;
+        },
+
+        // this callback is called just before the "beforeClose" to check the value
+        // if the value is valid, return true and the keyboard will continue as it
+        // should (close if not always open, etc)
+        // if the value is not value, return false and the clear the keyboard value
+        // ( like this "keyboard.$preview.val('');" ), if desired
+        // The validate function is called after each input, the "isClosing" value
+        // will be false; when the accept button is clicked, "isClosing" is true
+        validate: function (keyboard, value, isClosing) {
+            if ($('.donation-details').css('display') == 'block') {
+                let otherAmount = $('#other-amount-btn').val();
+                $('#txtAmount').val(otherAmount);
+            }
+            return true;
+        }
+
+    });
+});
+
+$(document).on('focus', '.vr-keyboard-num-quantity', function () {
+    let self = $(this);
+    self.keyboard({
+        // *** choose layout ***
+        layout       : 'custom',
+        customLayout : { 'normal'  : ['7 8 9 {b}', '4 5 6 {clear}', '0 1 2 3', '{c} {a}']},
+
+        // allow jQuery position utility to reposition the keyboard on window resize
+        reposition : true,
+
+        // preview added above keyboard if true, original input/textarea used if false
+        // always disabled for contenteditable elements
+        usePreview : true,
+
+        // if true, the keyboard will always be visible
+        alwaysOpen : false,
+
+        // give the preview initial focus when the keyboard becomes visible
+        initialFocus : true,
+        // Avoid focusing the input the keyboard is attached to
+        noFocus : false,
+
+        // if true, keyboard will remain open even if the input loses focus.
+        stayOpen : false,
+
+        // Prevents the keyboard from closing when the user clicks or
+        // presses outside the keyboard. The `autoAccept` option must
+        // also be set to true when this option is true or changes are lost
+        userClosed : false,
+
+        // if true, keyboard will not close if you press escape.
+        ignoreEsc : false,
+
+        // if true, keyboard will only closed on click event instead of mousedown or
+        // touchstart. The user can scroll the page without closing the keyboard.
+        closeByClickEvent : false,
+
+        // *** change keyboard language & look ***
+        display : {
+            // \u2714 = check mark - same action as accept
+            'a'      : '\u2714:Accept (Shift-Enter)',
+            'accept' : 'Accept:Accept (Shift-Enter)',
+            'alt'    : 'AltGr:Alternate Graphemes',
+            // \u232b = outlined left arrow with x inside
+            'b'      : '\u232b:Backspace',
+            'bksp'   : 'Bksp:Backspace',
+            // \u2716 = big X, close - same action as cancel
+            'c'      : '\u2716:Cancel (Esc)',
+            'cancel' : 'Cancel:Cancel (Esc)',
+            // clear num pad
+            'clear'  : 'C:Clear',
+            'combo'  : '\u00f6:Toggle Combo Keys',
+            // decimal point for num pad (optional);
+            // change '.' to ',' for European format
+            'dec'    : '.:Decimal',
+            // down, then left arrow - enter symbol
+            'e'      : '\u21b5:Enter',
+            'empty'  : '\u00a0', // &nbsp;
+            'enter'  : 'Enter:Enter',
+            // \u2190 = left arrow (move caret)
+            'left'   : '\u2190',
+            // caps lock
+            'lock'   : '\u21ea Lock:Caps Lock',
+            'next'   : 'Next',
+            'prev'   : 'Prev',
+            // \u2192 = right arrow (move caret)
+            'right'  : '\u2192',
+            // \u21e7 = thick hollow up arrow
+            's'      : '\u21e7:Shift',
+            'shift'  : 'Shift:Shift',
+            // \u00b1 = +/- sign for num pad
+            'sign'   : '\u00b1:Change Sign',
+            'space'  : '&nbsp;:Space',
+
+            // \u21e5 = right arrow to bar; used since this virtual
+            // keyboard works with one directional tabs
+            't'      : '\u21e5:Tab',
+            // \u21b9 is the true tab symbol (left & right arrows)
+            'tab'    : '\u21e5 Tab:Tab',
+            // replaced by an image
+            'toggle' : ' ',
+
+            // added to titles of keys
+            // accept key status when acceptValid:true
+            'valid': 'valid',
+            'invalid': 'invalid',
+            // combo key states
+            'active': 'active',
+            'disabled': 'disabled'
+        },
+
+        // Message added to the key title while hovering, if the mousewheel plugin exists
+        wheelMessage : 'Use mousewheel to see other keys',
+
+        css : {
+            // input & preview
+            input          : 'ui-widget-content ui-corner-all',
+            // keyboard container
+            container      : 'ui-widget-content ui-widget ui-corner-all ui-helper-clearfix',
+            // keyboard container extra class (same as container, but separate)
+            popup: '',
+            // default state
+            buttonDefault  : 'ui-state-default ui-corner-all',
+            // hovered button
+            buttonHover    : 'ui-state-hover',
+            // Action keys (e.g. Accept, Cancel, Tab, etc); this replaces the "actionClass" option
+            buttonAction   : 'ui-state-active',
+            // Active keys (e.g. shift down, meta keyset active, combo keys active)
+            buttonActive   : 'ui-state-active',
+            // used when disabling the decimal button {dec}
+            buttonDisabled : 'ui-state-disabled',
+            // empty button class name {empty}
+            buttonEmpty    : 'ui-keyboard-empty'
+        },
+
+        // *** Useability ***
+        // Auto-accept content when clicking outside the keyboard (popup will close)
+        autoAccept: true,
+        // Auto-accept content even if the user presses escape
+        // (only works if `autoAccept` is `true`)
+        autoAcceptOnEsc : false,
+
+        // Prevents direct input in the preview window when true
+        lockInput : false,
+
+        // Prevent keys not in the displayed keyboard from being typed in
+        restrictInput : false,
+        // Additional allowed characters while restrictInput is true
+        restrictInclude : '', // e.g. 'a b foo \ud83d\ude38'
+
+        // Check input against validate function, if valid the accept button
+        // is clickable; if invalid, the accept button is disabled.
+        acceptValid : true,
+        // Auto-accept when input is valid; requires `acceptValid`
+        // set `true` & validate callback
+        autoAcceptOnValid : false,
+
+        // if acceptValid is true & the validate function returns a false, this option
+        // will cancel a keyboard close only after the accept button is pressed
+        cancelClose : true,
+
+        // Use tab to navigate between input fields
+        tabNavigation : false,
+
+        // press enter (shift-enter in textarea) to go to the next input field
+        enterNavigation : true,
+        // mod key options: 'ctrlKey', 'shiftKey', 'altKey', 'metaKey' (MAC only)
+        // alt-enter to go to previous; shift-alt-enter to accept & go to previous
+        enterMod : 'altKey',
+
+        // if true, the next button will stop on the last keyboard input/textarea;
+        // prev button stops at first
+        // if false, the next button will wrap to target the first input/textarea;
+        // prev will go to the last
+        stopAtEnd : true,
+
+        // Set this to append the keyboard immediately after the input/textarea it
+        // is attached to. This option works best when the input container doesn't
+        // have a set width and when the "tabNavigation" option is true
+        appendLocally : false,
+
+        // Append the keyboard to a desired element. This can be a jQuery selector
+        // string or object
+        appendTo : 'body',
+
+        // If false, the shift key will remain active until the next key is (mouse)
+        // clicked on; if true it will stay active until pressed again
+        stickyShift : true,
+
+        // caret placed at the end of any text when keyboard becomes visible
+        caretToEnd : false,
+
+        // Prevent pasting content into the area
+        preventPaste : false,
+
+        // caret stays this many pixels from the edge of the input
+        // while scrolling left/right; use "c" or "center" to center
+        // the caret while scrolling
+        scrollAdjustment : 10,
+
+        // Set the max number of characters allowed in the input, setting it to
+        // false disables this option
+        maxLength : 16,
+
+        // allow inserting characters @ caret when maxLength is set
+        maxInsert : true,
+
+        // Mouse repeat delay - when clicking/touching a virtual keyboard key, after
+        // this delay the key will start repeating
+        repeatDelay : 500,
+
+        // Mouse repeat rate - after the repeatDelay, this is the rate (characters
+        // per second) at which the key is repeated. Added to simulate holding down
+        // a real keyboard key and having it repeat. I haven't calculated the upper
+        // limit of this rate, but it is limited to how fast the javascript can
+        // process the keys. And for me, in Firefox, it's around 20.
+        repeatRate : 20,
+
+        // resets the keyboard to the default keyset when visible
+        resetDefault : false,
+
+        // Event (namespaced) on the input to reveal the keyboard. To disable it,
+        // just set it to an empty string ''.
+        openOn : 'focus',
+
+        // When the character is added to the input
+        keyBinding : 'mousedown touchstart',
+
+        // enable/disable mousewheel functionality
+        // enabling still depends on the mousewheel plugin
+        useWheel : true,
+
+        // combos (emulate dead keys)
+        // http://en.wikipedia.org/wiki/Keyboard_layout#US-International
+        // if user inputs `a the script converts it to à, ^o becomes ô, etc.
+        useCombos : true,
+
+        // *** Methods ***
+        // Callbacks - add code inside any of these callback functions as desired
+        initialized   : function(e, keyboard, el) {},
+        beforeVisible : function(e, keyboard, el) {
+            $('body').addClass('vk-attached');
+        },
+        visible       : function(e, keyboard, el) {},
+        beforeInsert  : function(e, keyboard, el, textToAdd) { return textToAdd; },
+        change        : function(e, keyboard, el) {},
+        beforeClose: function (e, keyboard, el, accepted) {
+
+        },
+        accepted: function (e, keyboard, el) {
+            console.log(el);
+
+            let self = $(el);
+            if (!parseFloat(keyboard.$preview.val()) > 0) {
+                $(el).val(0);
+                $(el).closest('.product-single').removeClass('active');
+            }else{
+                $(el).closest('.product-single').addClass('active');
+            }
+            addItemToCart(self, $('.cart-item-list'));
+            calculateTotal();
+            calculateGrandTotal();
+
+
+        },
+        canceled: function (e, keyboard, el) {
+
+        },
+        restricted    : function(e, keyboard, el) {},
+        hidden        : function(e, keyboard, el) {
+            $('body').removeClass('vk-attached');
+        },
+
+        // called instead of base.switchInput
+        switchInput : function(keyboard, goToNext, isAccepted) {},
+
+        // used if you want to create a custom layout or modify the built-in keyboard
+        // create : function(keyboard) { return keyboard.buildKeyboard(); },
+
+        // build key callback (individual keys)
+        buildKey : function( keyboard, data ) {
+            return data;
+        },
+
+        // this callback is called just before the "beforeClose" to check the value
+        // if the value is valid, return true and the keyboard will continue as it
+        // should (close if not always open, etc)
+        // if the value is not value, return false and the clear the keyboard value
+        // ( like this "keyboard.$preview.val('');" ), if desired
+        // The validate function is called after each input, the "isClosing" value
+        // will be false; when the accept button is clicked, "isClosing" is true
+        validate: function (keyboard, value, isClosing) {
+
+            return true;
+        }
+
+    });
 });
 
 

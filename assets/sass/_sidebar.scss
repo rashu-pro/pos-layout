@@ -9,6 +9,13 @@
   z-index: 9999;
   right:0;
   transform:translateX(100%);
+  transition:0.3s height linear;
+
+  &.sidebar-top{
+    @media (min-width:992px){
+      height:100vh;
+    }
+  }
 
   &-body{
     max-height:calc(100% - 130px);

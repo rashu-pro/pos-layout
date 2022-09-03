@@ -56,6 +56,12 @@
           font-weight: $font-semibold;
         }
       }
+      .item-quantity{
+        &:focus{
+          border-color:#C1BCBC;
+          outline:0;
+        }
+      }
     }
 
     &.focused{
