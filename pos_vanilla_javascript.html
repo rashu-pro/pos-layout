@@ -82,7 +82,6 @@
                         <div class="products-wrapper">
                             <div class="product-regular-wrapper">
                                 <div class="row less-gutter products-regular-wrapper-row-js" id="product-wrapper">
-                                    <p>products</p>
 
                                 </div>
                             </div>
@@ -116,9 +115,9 @@
                                             <div class="form-group">
                                                 <label class="d-block">Quantity</label>
                                                 <div class="product-quantity">
-                                                    <button type="button" class="btn btn-icon btn-before btn-minus-js"><img src="assets/images/minus_24.png" alt="minus"> </button>
+                                                    <button type="button" data-method="stepdown" class="btn btn-icon btn-before btn-minus-js btn-quantity-js"><img src="assets/images/minus_24.png" alt="minus"> </button>
                                                     <input type="number" class="form-control item-quantity">
-                                                    <button type="button" class="btn btn-icon btn-after btn-plus-js"><img src="assets/images/plus_24.png" alt="plus"> </button>
+                                                    <button type="button" data-method="stepup" class="btn btn-icon btn-after btn-plus-js btn-quantity-js"><img src="assets/images/plus_24.png" alt="plus"> </button>
                                                 </div>
                                             </div>
                                             <div class="form-group pl-20">
@@ -289,14 +288,14 @@
 
 <!-- CART ITEM DIV TO CLONE -->
 <div class="cart-item-to-clone d-none">
-    <div class="cart-item">
+    <div class="cart-item" data-type="cloneable">
         <div class="cart-item-content">
-            <h3 class="section-title item-title">59th Annual Convention - Adult</h3>
+            <h3 class="section-title item-title"></h3>
             <div class="cart-item-content-foot">
                 <div class="product-quantity medium">
-                    <button type="button" class="btn btn-icon btn-before btn-minus-js"><img src="assets/images/minus_24.png" alt="minus"> </button>
+                    <button type="button" data-method="stepdown" class="btn btn-icon btn-before btn-minus-js btn-quantity-js"><img src="assets/images/minus_24.png" alt="minus"> </button>
                     <input type="number" class="form-control item-quantity"  value="1">
-                    <button type="button" class="btn btn-icon btn-after btn-plus-js"><img src="assets/images/plus_24.png" alt="plus"> </button>
+                    <button type="button" data-method="stepup" class="btn btn-icon btn-after btn-plus-js btn-quantity-js"><img src="assets/images/plus_24.png" alt="plus"> </button>
                 </div>
 
                 <div class="price-holder">
@@ -337,9 +336,9 @@
                         </div>
 
                         <div class="product-quantity">
-                            <button type="button" class="btn btn-icon btn-before btn-minus-js"><img src="assets/images/minus_24.png" alt="minus"> </button>
+                            <button type="button" data-method="stepdown" class="btn btn-icon btn-before btn-minus-js btn-quantity-js"><img src="assets/images/minus_24.png" alt="minus"> </button>
                             <input type="number" class="form-control item-quantity" value="0">
-                            <button type="button" class="btn btn-icon btn-after btn-plus-js"><img src="assets/images/plus_24.png" alt="plus"> </button>
+                            <button type="button" data-method="stepup" class="btn btn-icon btn-after btn-plus-js btn-quantity-js"><img src="assets/images/plus_24.png" alt="plus"> </button>
                         </div>
                     </div>
                 </div>
