@@ -77,6 +77,8 @@ $(document).on('click', '.product-single .btn-minus-js', function (e) {
     calculateGrandTotal();
 });
 
+
+
 $(document).on('click', '.product-custom .btn-plus-js', function (e) {
     e.preventDefault();
     let self = $(this);
@@ -88,6 +90,7 @@ $(document).on('click', '.product-custom .btn-minus-js', function (e) {
     let self = $(this);
     quantityIncreaseDecrease(self, 'decrease');
 });
+
 
 $(document).on('click', '.cart-item .btn-plus-js', function (e) {
     e.preventDefault();

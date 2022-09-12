@@ -115,9 +115,9 @@
                                             <div class="form-group">
                                                 <label class="d-block">Quantity</label>
                                                 <div class="product-quantity">
-                                                    <button type="button" data-method="stepdown" class="btn btn-icon btn-before btn-minus-js btn-quantity-js"><img src="assets/images/minus_24.png" alt="minus"> </button>
-                                                    <input type="number" class="form-control item-quantity">
-                                                    <button type="button" data-method="stepup" class="btn btn-icon btn-after btn-plus-js btn-quantity-js"><img src="assets/images/plus_24.png" alt="plus"> </button>
+                                                    <button type="button" data-method="stepdown" class="btn btn-icon btn-before btn-quantity-custom-js"><img src="assets/images/minus_24.png" alt="minus"> </button>
+                                                    <input type="number" class="form-control item-quantity" value="0">
+                                                    <button type="button" data-method="stepup" class="btn btn-icon btn-after btn-quantity-custom-js"><img src="assets/images/plus_24.png" alt="plus"> </button>
                                                 </div>
                                             </div>
                                             <div class="form-group pl-20">
@@ -218,7 +218,7 @@
 
                                         </div>
                                     </div>
-                                    <div class="summary-box">
+                                    <div class="summary-box cart-summary">
                                         <div class="table-responsive">
                                             <table class="table table-striped">
                                                 <tbody>
@@ -227,12 +227,17 @@
                                                     <td><span class="currency">$</span> <span class="amount subtotal subtotal-js">0</span></td>
                                                 </tr>
 
-                                                <tr>
+                                                <tr class="extra-param-row param-enable" data-type="solid" data-method="subtraction">
                                                     <td>Discount <span class="ml-10 d-inline-block badge badge-primary discount-note-js"></span></td>
-                                                    <td><span class="currency">$</span> <span class="amount discount discount-js">0</span></td>
+                                                    <td><span class="currency">$</span> <span class="amount discount discount-enable discount-js">0</span></td>
                                                 </tr>
 
-                                                <tr class="donation-tr">
+                                                <tr class="extra-param-row param-enable" data-type="percentage" data-method="addition">
+                                                    <td>Tax(5%) <span class="ml-10 d-inline-block badge badge-primary discount-note-js"></span></td>
+                                                    <td><span class="currency">$</span> <span class="amount discount tax-enable tax-amount-js" data-taxpercentage="5" data-taxableAmount="0">0</span></td>
+                                                </tr>
+
+                                                <tr class="donation-tr extra-param-row param-disable" data-type="solid" data-method="addition">
                                                     <td>
                                                         <button type="button" class="btn btn-transparent btn-blank donation-remove-js">
                                                             <img src="assets/images/close_block.png" alt="remove cart item">
@@ -299,7 +304,7 @@
                 </div>
 
                 <div class="price-holder">
-                    <p class="price m-0"><span class="currency">$</span> <span class="amount item-price">200</span> </p>
+                    <p class="price m-0"><span class="currency">$</span> <span class="amount item-price"></span> </p>
                 </div>
             </div>
         </div>

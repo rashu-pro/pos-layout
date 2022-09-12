@@ -70,14 +70,9 @@ document.querySelector('.cart-close-js').addEventListener('click', (event)=>{
     cartToggle(false);
 });
 
-//=== PRODUCT ADD/REMOVE TO CART
-// let btnQuantitys = document.querySelectorAll('.btn-quantity-js');
-// btnQuantitys.forEach(btnQuantity=>{
-//
-// });
-
-document.body.addEventListener('click', function (event) {
-    if(event.target && event.target.matches('.btn-quantity-js') || event.target.matches('.btn-quantity-js img')){
+//=== ITEM ADD/REMOVE TO CART
+document.addEventListener('click', function (event) {
+    if(event.target && event.target.matches('.product-single .btn-quantity-js') || event.target.matches('.product-single .btn-quantity-js img')){
         event.preventDefault();
         let self = event.target;
         if(event.target.nodeName==='IMG'){
@@ -93,77 +88,87 @@ document.body.addEventListener('click', function (event) {
             dataKey = self.closest('.product-single').getAttribute('data-key'),
             cartItemDivCloned = document.querySelector('.cart-item[data-type=cloneable]').cloneNode(true);
 
+        //=== update quantity value in DOM at quantity button click
         self.closest('.product-quantity').querySelector('.item-quantity').value = quantity;
+
         let cartItem = makeCartItemReadyToAppend(cartItemDivCloned, dataId, itemUnitPrice, quantity, itemName, itemCategoryKey, dataKey);
         addItemIntoCart(self, itemHolder, cartItem, dataId, quantity, itemUnitPrice);
-        self.closest('.product-single').classList.remove('active');
-        if(quantity>0){
-            self.closest('.product-single').classList.add('active');
-        }
+        isCartEmpty(document.querySelectorAll('.cart-item-list .cart-item'));
 
-        // calculateTotal();
-        // calculateGrandTotal();
+        let currentProductSelector = self.closest('.product-single');
+        isProductActive(currentProductSelector, quantity);
+
+        cartSummary();
+    }
+});
+
+//=== CUSTOM PRODUCT QUANTITY VALUE UPDATE ON QUANTITY BUTTON CLICK
+document.addEventListener('click', function (event) {
+    if(event.target && event.target.matches('.product-custom .btn-quantity-custom-js') || event.target.matches('.product-custom .btn-quantity-custom-js img')){
+        event.preventDefault();
+        let self = event.target;
+        if(event.target.nodeName==='IMG'){
+            self = event.target.parentNode;
+        }
+        self.closest('.product-custom').querySelector('.item-quantity').value = quantityCalculation(self.closest('.product-custom').querySelector('.item-quantity').value, self.getAttribute('data-method'));
     }
 
 });
 
-
-
-
-
-
-function addItemIntoCart(self, cartItemHolder, cartItem, dataId, quantity, itemUnitPrice){
-    if(!isElementNode(cartItem)){
-        console.error('No item has been found to add into cart!');
-        return;
-    }
-
-    let cartItemSelector = document.querySelector('.cart-item-list .cart-item[data-id='+dataId+']');
-    //=== when quantity is zero
-    if(quantity<1){
-        if(cartItemSelector){
-            cartItemSelector.remove();
+//=== ITEM QUANTITY UPDATE ON QUANTITY BUTTON CLICK ON CART ITEM
+document.addEventListener('click', function (event) {
+    if(event.target && event.target.matches('.cart-item .btn-quantity-js') || event.target.matches('.cart-item .btn-quantity-js img')){
+        event.preventDefault();
+        let self = event.target;
+        if(event.target.nodeName==='IMG'){
+            self = event.target.parentNode;
         }
-        return;
+        let dataId = self.closest('.cart-item').getAttribute('data-id'),
+            quantity = quantityCalculation(self.closest('.cart-item').querySelector('.item-quantity').value, self.getAttribute('data-method')),
+            itemUnitPrice = self.closest('.cart-item').getAttribute('data-price'),
+            currentProductSelector = document.querySelector('.product-single[data-id='+dataId+']');
+        self.closest('.cart-item').querySelector('.item-quantity').value = quantity;
+        currentProductSelector.querySelector('.item-quantity').value = quantity;
+        isProductActive(currentProductSelector, quantity);
+        if(quantity>0){
+            updateCartItem(self.closest('.cart-item'), dataId, quantity, itemUnitPrice);
+        }
+
+        if(quantity<1){
+            self.closest('.cart-item').remove();
+        }
+        isCartEmpty(document.querySelectorAll('.cart-item-list .cart-item'));
+        cartSummary();
     }
+});
 
-    if(cartItemSelector){
-        updateCartItem(cartItemSelector, dataId, quantity, itemUnitPrice);
-    }else{
-        document.querySelector('.empty-cart-notice-wrapper').classList.remove('active');
-        cartItemHolder.append(cartItem);
+//=== REMOVING CART ITEM ON CLOSE ICON CLICK
+document.addEventListener('click', function (event) {
+    if(event.target && event.target.matches('.cart-remove-js') || event.target.matches('.cart-remove-js *')){
+        event.preventDefault();
+        let self = event.target;
+        if(event.target.nodeName==='IMG'){
+            self = event.target.parentNode;
+        }
+        let dataId = self.closest('.cart-item').getAttribute('data-id'),
+            quantity = 0;
+        removeCartItem(self, dataId, quantity);
+        cartSummary();
     }
-    focusingCartItem(cartItemSelector);
-    if(self.closest('.product-custom')){
-        emptyCustomItemFields(self.closest('.product-custom'));
+});
+
+//=== CUSTOM PRODUCT ADD CLICK ACTION
+document.addEventListener('click', function (event) {
+    if(event.target && event.target.matches('.btn-custom-product-add-js') || event.target.matches('.btn-custom-product-add-js *')){
+        event.preventDefault();
+        let self = event.target;
+        if(event.target.nodeName==='IMG'){
+            self = event.target.parentNode;
+        }
+
+        let dataId = 'data-id-' + Math.floor(Math.random() * 90000) + 10000;
     }
-
-}
-
-function updateCartItem(cartItemToUpdate, dataId, quantity, itemUnitPrice) {
-    cartItemToUpdate.querySelector('.item-quantity').value = quantity;
-    cartItemToUpdate.querySelector('.item-price').innerHTML = quantity*itemUnitPrice;
-    cartItemToUpdate.setAttribute('data-quantity', quantity);
-    cartItemToUpdate.querySelector('.product-quantity').value = quantity;
-    cartItemToUpdate.querySelector('.product-price').value = quantity*itemUnitPrice;
-}
-
-function focusingCartItem(elementSelector) {
-    if(!elementSelector){
-        return;
-    }
-    elementSelector.classList.add('focused');
-    setTimeout(function () {
-        elementSelector.classList.remove('focused');
-    },400)
-}
-
-function emptyCustomItemFields(parent){
-    let fields = parent.querySelectorAll('.form-control');
-    fields.forEach(field=>{
-        field.value = '';
-    })
-}
+});
 
 
 
@@ -181,6 +186,7 @@ function emptyCustomItemFields(parent){
  */
 
 /**
+ *
  * enable loader div
  */
 function loaderDivEnable() {
@@ -188,12 +194,18 @@ function loaderDivEnable() {
 }
 
 /**
+ *
  * disable loader div
  */
 function loaderDivDisable() {
     document.getElementById('loader-div').classList.remove('active');
 }
 
+/**
+ *
+ * @param elementSelector
+ * @return {boolean} - check whether selector is a valid DOM element
+ */
 function isElementNode(elementSelector){
     return elementSelector.nodeType === Node.ELEMENT_NODE;
 }
@@ -267,6 +279,7 @@ function loadItems(itemCategory, itemWrapper, itemCloned) {
 
 /**
  *
+ * @param itemCloned
  * @param dataId
  * @param itemKey
  * @param itemName
@@ -390,13 +403,248 @@ function makeCartItemReadyToAppend(cartItem, dataId, itemUnitPrice, quantity, it
     cartItem.setAttribute('data-quantity', quantity);
     cartItem.querySelector('.item-title').innerHTML = itemName;
     cartItem.querySelector('.item-quantity').value = quantity;
-    cartItem.querySelector('.item-price').value = quantity*itemUnitPrice;
+    cartItem.querySelector('.item-price').innerHTML = parseInt(quantity)*parseInt(itemUnitPrice);
 
     cartItem.querySelector('.product-category-key').innerHTML = itemCategoryKey;
     cartItem.querySelector('.product-key').value = dataKey;
     cartItem.querySelector('.product-name').value = itemName;
     cartItem.querySelector('.product-quantity').value = quantity;
     cartItem.querySelector('.product-unit-price').value = itemUnitPrice;
-    cartItem.querySelector('.product-price').value = quantity*itemUnitPrice;
+    cartItem.querySelector('.product-price').value = parseInt(quantity)*parseInt(itemUnitPrice);
     return cartItem;
+}
+
+/**
+ *
+ * @param self
+ * @param cartItemHolder
+ * @param cartItem
+ * @param dataId
+ * @param quantity
+ * @param itemUnitPrice
+ * @effects adds item into cart
+ */
+function addItemIntoCart(self, cartItemHolder, cartItem, dataId, quantity, itemUnitPrice){
+    if(!isElementNode(cartItem)){
+        console.error('No item has been found to add into cart!');
+        return;
+    }
+
+    let cartItemSelector = document.querySelector('.cart-item-list .cart-item[data-id='+dataId+']');
+    //=== when quantity is zero
+    if(quantity<1){
+        if(cartItemSelector){
+            cartItemSelector.remove();
+        }
+        return;
+    }
+
+    if(cartItemSelector){
+        updateCartItem(cartItemSelector, dataId, quantity, itemUnitPrice);
+    }else{
+        document.querySelector('.empty-cart-notice-wrapper').classList.remove('active');
+        cartItemHolder.append(cartItem);
+    }
+    focusingCartItem(cartItemSelector);
+    if(self.closest('.product-custom')){
+        emptyCustomItemFields(self.closest('.product-custom'));
+    }
+
+}
+
+/**
+ *
+ * @param cartItems
+ * @effects when there is no item in cart, empty cart icon will be visible
+ */
+function isCartEmpty(cartItems){
+    if(cartItems.length<1){
+        document.querySelector('.empty-cart-notice-wrapper').classList.add('active');
+    }
+}
+
+/**
+ *
+ * @param cartItemToUpdate
+ * @param dataId
+ * @param quantity
+ * @param itemUnitPrice
+ * @effects update cart item when item is already been added
+ */
+function updateCartItem(cartItemToUpdate, dataId, quantity, itemUnitPrice) {
+    cartItemToUpdate.querySelector('.item-quantity').value = quantity;
+    cartItemToUpdate.querySelector('.item-price').innerHTML = quantity*itemUnitPrice;
+    cartItemToUpdate.setAttribute('data-quantity', quantity);
+    cartItemToUpdate.querySelector('.product-quantity').value = quantity;
+    cartItemToUpdate.querySelector('.product-price').value = quantity*itemUnitPrice;
+}
+
+/**
+ *
+ * @param elementSelector
+ * @effects focuses cart item when its being added
+ */
+function focusingCartItem(elementSelector) {
+    if(!elementSelector){
+        return;
+    }
+    elementSelector.classList.add('focused');
+    setTimeout(function () {
+        elementSelector.classList.remove('focused');
+    },400)
+}
+
+/**
+ *
+ * @param parent
+ * @effects empty custom fields after adding custom product into cart
+ */
+function emptyCustomItemFields(parent){
+    let fields = parent.querySelectorAll('.form-control');
+    fields.forEach(field=>{
+        field.value = '';
+    })
+}
+
+/**
+ *
+ * @param cartItemSelector
+ * @return {number} - cart subtotal
+ */
+function calculateCartSubtotal(cartItemSelector){
+    if(!cartItemSelector){
+        console.error('No cart item found!');
+        return;
+    }
+    let subtotal = 0;
+    cartItemSelector.forEach(cartItem=>{
+        subtotal += parseFloat(cartItem.querySelector('.item-price').innerText);
+    });
+    return subtotal;
+}
+
+/**
+ *
+ * @param taxableAmount
+ * @param taxPercentage
+ * @return {number} - tax amount
+ */
+function calculateTax(taxableAmount, taxPercentage){
+    if(taxableAmount<=0) return;
+    return (taxPercentage*taxableAmount)/100;
+}
+
+/**
+ *
+ * @param extraParamRows
+ * @return {Array} - extra parameters to calculate grand total, like: tax, discount, donation etcetera.
+ */
+function extraParams(extraParamRows){
+    let extraParams = [];
+    if(extraParamRows.length<1) return;
+
+    extraParamRows.forEach(param=>{
+        extraParams.push({
+            'paramValue': parseFloat(param.querySelector('.amount').innerText),
+            'calculationMethod': param.getAttribute('data-method')
+        });
+    });
+    return extraParams;
+}
+
+/**
+ *
+ * @param subtotal
+ * @param extraParams
+ * @return {number} - total amount of the cart
+ */
+function calculateGrandTotal(subtotal, extraParams) {
+    let calculateSign = '+',
+        calculationString = '',
+        grandTotal = subtotal;
+    if(extraParams.length<1){
+        return grandTotal;
+    }
+    extraParams.forEach(param=>{
+        if(param.calculationMethod==='addition'){
+            calculateSign = '+';
+            calculationString += `${grandTotal}${calculateSign}${param.paramValue}`;
+            grandTotal +=param.paramValue;
+            calculationString += `=${grandTotal}`;
+        }
+
+        if(param.calculationMethod==='subtraction'){
+            calculateSign = '-';
+            calculationString += `\n${grandTotal}${calculateSign}${param.paramValue}`;
+            grandTotal -= param.paramValue;
+            calculationString += `=${grandTotal}`;
+        }
+    });
+    return grandTotal;
+}
+
+/**
+ *
+ * @param subtotal
+ * @param grandTotal
+ * @param subtotalSelector
+ * @param grandTotalSelector
+ * @effects populate subtotal and grandtotal into the DOM
+ */
+function populateCartSummaryData(subtotal, grandTotal, subtotalSelector, grandTotalSelector){
+    if(!Number.isInteger(subtotal)) subtotal = subtotal.toFixed(2);
+    if(!Number.isInteger(grandTotal)) grandTotal = grandTotal.toFixed(2);
+    subtotalSelector.innerText = subtotal;
+    grandTotalSelector.innerText = grandTotal;
+}
+
+/**
+ *
+ * @param currentProductSelector
+ * @param quantity
+ * @effects 'active' class will be toggled on current item on item list
+ */
+function isProductActive(currentProductSelector, quantity) {
+    if(quantity<1){
+        currentProductSelector.classList.remove('active');
+        return;
+    }
+    currentProductSelector.classList.add('active');
+}
+
+/**
+ * ALL THE CART SUMMARY RELATED FUNCTIONALITY HAS BEEN DONE HERE
+ */
+function cartSummary(){
+    let cartItemSelectors = document.querySelectorAll('.cart-item-list .cart-item');
+    let subtotal = parseFloat(calculateCartSubtotal(cartItemSelectors));
+
+    let taxableAmount = subtotal;
+    let taxElementSelector = document.querySelector('.tax-amount-js.tax-enable');
+    if(taxElementSelector){
+        taxElementSelector.setAttribute('data-taxableamount', taxableAmount);
+        taxableAmount<=0?taxElementSelector.innerHTML = 0:taxElementSelector.innerHTML = calculateTax(taxableAmount, parseInt(taxElementSelector.getAttribute('data-taxpercentage')));
+    }
+
+    let extraParamRows = document.querySelectorAll('.cart-summary .extra-param-row.param-enable');
+    let extraParam = extraParams(extraParamRows);
+
+    let total = calculateGrandTotal(subtotal, extraParam);
+    let subtotalSelector = document.querySelector('.subtotal-js');
+    let grandTotalSelector = document.querySelector('.grand-total-js');
+    populateCartSummaryData(subtotal, total, subtotalSelector, grandTotalSelector);
+}
+
+/**
+ *
+ * @param self
+ * @param dataId
+ * @param quantity
+ * @effect remove cart item from the cart
+ */
+function removeCartItem(self, dataId, quantity) {
+    self.closest('.cart-item').querySelector('.item-quantity').value = quantity;
+    document.querySelector('.product-single[data-id='+dataId+']').querySelector('.item-quantity').value = quantity;
+    isProductActive(document.querySelector('.product-single[data-id='+dataId+']'), quantity);
+    document.querySelector('.cart-item-list .cart-item').remove();
 }
