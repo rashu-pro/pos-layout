@@ -1000,6 +1000,9 @@ select {
   bottom: -19px;
   right: 0;
 }
+.form-control.invalid {
+  border-color: #dc3545;
+}
 
 .input-group-text {
   border-color: #808080;
@@ -1391,6 +1394,9 @@ input[type=number] {
   width: 80px;
   border-color: #808080;
 }
+.product-custom .product-quantity .form-control.invalid {
+  border-color: #dc3545;
+}
 @media (min-width: 768px) {
   .product-custom .form-control {
     font-size: 18px;
@@ -1635,6 +1641,10 @@ input[type=number] {
 
 .email-address-field.invalid {
   border: 2px solid #a92834;
+}
+
+.currency {
+  margin-right: -3px;
 }
 
 .footer-credit {

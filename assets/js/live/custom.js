@@ -245,6 +245,9 @@ $(document).on('keyup', '.email-address-field', function () {
     $('.email-address-name-js').val(self.val());
 });
 
+
+
+
 function isEmail(status) {
     if (!status) {
         $('.email-address-name-js').val('');

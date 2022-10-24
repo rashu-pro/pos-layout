@@ -303,6 +303,9 @@
         .form-control{
           width:80px;
           border-color:#808080;
+          &.invalid{
+            border-color: $color-danger;
+          }
         }
       }
     }
@@ -613,4 +616,9 @@
   &.invalid{
     border:2px solid #a92834;
   }
+}
+
+
+.currency{
+  margin-right:-3px;
 }

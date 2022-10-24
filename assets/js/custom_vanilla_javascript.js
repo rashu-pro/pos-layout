@@ -128,8 +128,11 @@ document.addEventListener('click', function (event) {
             itemUnitPrice = self.closest('.cart-item').getAttribute('data-price'),
             currentProductSelector = document.querySelector('.product-single[data-id='+dataId+']');
         self.closest('.cart-item').querySelector('.item-quantity').value = quantity;
-        currentProductSelector.querySelector('.item-quantity').value = quantity;
-        isProductActive(currentProductSelector, quantity);
+        if(currentProductSelector){
+            currentProductSelector.querySelector('.item-quantity').value = quantity;
+            isProductActive(currentProductSelector, quantity);
+        }
+
         if(quantity>0){
             updateCartItem(self.closest('.cart-item'), dataId, quantity, itemUnitPrice);
         }
@@ -166,9 +169,106 @@ document.addEventListener('click', function (event) {
             self = event.target.parentNode;
         }
 
-        let dataId = 'data-id-' + Math.floor(Math.random() * 90000) + 10000;
+        let dataId = 'data-id-' + Math.floor(Math.random() * 90000) + 10000,
+            fieldsSelector = self.closest('.product-custom').querySelectorAll('.form-control');
+
+        fieldsSelector.forEach(field=>{
+            field.classList.remove('invalid');
+            if(field.closest('.form-group').querySelector('.warning-message')){
+                field.closest('.form-group').querySelector('.warning-message').remove();
+            }
+            let isValid = true;
+            if(field.value === '') isValid = false;
+            if(field.classList.contains('field-number') && isNaN(field.value)) isValid = false;
+            if(field.classList.contains('field-number') && !isNaN(field.value) && field.value<=0) isValid = false;
+
+            if(!isValid){
+                field.classList.add('invalid');
+                let warningMessage = document.createElement('p');
+                warningMessage.classList.add('warning-message');
+                warningMessage.append('Invalid input given!');
+                field.closest('.form-group').append(warningMessage);
+            }
+        });
+
+        if(self.closest('.product-custom').querySelector('.form-control.invalid')){
+            self.closest('.product-custom').querySelector('.form-control.invalid').focus();
+            return;
+        }
+
+        loaderDivEnable();
+        let itemName = self.closest('.product-custom').querySelector('.product-custom-name-js').value,
+            itemCategory = "custom-product",
+            itemUnitPrice = self.closest('.product-custom').querySelector('.product-custom-price-js').value,
+            quantity = self.closest('.product-custom').querySelector('.item-quantity').value,
+            cartItemDivCloned = document.querySelector('.cart-item[data-type=cloneable]').cloneNode(true),
+            cartItem = makeCartItemReadyToAppend(cartItemDivCloned, dataId, itemUnitPrice, quantity, itemName, itemCategory, "custom-product-key");
+        addItemIntoCart(self, itemHolder, cartItem, dataId, quantity, itemUnitPrice);
+        isCartEmpty(document.querySelectorAll('.cart-item-list .cart-item'));
+        cartSummary();
+        loaderDivDisable();
     }
 });
+
+//=== ADD DONATION TO THE CART SUMMARY
+document.addEventListener('click', function (event) {
+    if(event.target && event.target.matches('.btn-donate-js') || event.target.matches('.btn-donate-js *')){
+        let self = event.target;
+        if(event.target.nodeName==='IMG'){
+            self = event.target.parentNode;
+        }
+        let donationFieldSelector = self.closest('.product-custom').querySelector('.donation-amount-js'),
+            itemName = self.closest('.product-custom').getAttribute('data-name');
+        donationFieldSelector.classList.remove('invalid');
+        if(self.closest('.product-custom').querySelector('.warning-message')){
+            self.closest('.product-custom').querySelector('.warning-message').remove();
+        }
+
+        let isValid = true;
+        if(donationFieldSelector.value === '') isValid = false;
+        if(donationFieldSelector.classList.contains('field-number') && isNaN(donationFieldSelector.value)) isValid = false;
+        if(donationFieldSelector.classList.contains('field-number') && !isNaN(donationFieldSelector.value) && donationFieldSelector.value<=0) isValid = false;
+
+        if(!isValid){
+            donationFieldSelector.classList.add('invalid');
+            let warningMessage = document.createElement('p');
+            warningMessage.classList.add('warning-message');
+            warningMessage.append('Invalid amount given!');
+            donationFieldSelector.closest('.form-group').append(warningMessage);
+            return;
+        }
+        loaderDivEnable();
+        let donationAmount = parseFloat(donationFieldSelector.value);
+
+        document.querySelector('.donation-tr').style.display = "table-row";
+        document.querySelector('.donation-tr').classList.remove('param-disable');
+        document.querySelector('.donation-tr').classList.add('param-enable');
+        document.querySelector('.donation-tr .item-name').innerText = itemName;
+        document.querySelector('.donation-tr .amount').innerText = donationFieldSelector.value - 0;
+        setGrandTotal();
+        loaderDivDisable();
+    }
+
+});
+
+//=== DONATION REMOVE BUTTON CLICK ACTION
+document.addEventListener('click', function (event) {
+    if(event.target && event.target.matches('.donation-remove-js') || event.target.matches('.donation-remove-js *')){
+        let self = event.target;
+        if(event.target.nodeName==='IMG'){
+            self = event.target.parentNode;
+        }
+
+        self.closest('.donation-tr').querySelector('.amount').innerText = 0;
+        document.querySelector('.donation-amount-js').value = 0;
+        setGrandTotal();
+        self.closest('.donation-tr').style.display = "none";
+    }
+});
+
+
+
+
 
 
 
@@ -398,6 +498,7 @@ function makeCartItemReadyToAppend(cartItem, dataId, itemUnitPrice, quantity, it
         return;
     }
     cartItem.classList.add(dataId);
+    cartItem.removeAttribute('data-type');
     cartItem.setAttribute('data-id', dataId);
     cartItem.setAttribute('data-price', itemUnitPrice);
     cartItem.setAttribute('data-quantity', quantity);
@@ -648,3 +749,16 @@ function removeCartItem(self, dataId, quantity) {
     isProductActive(document.querySelector('.product-single[data-id='+dataId+']'), quantity);
     document.querySelector('.cart-item-list .cart-item').remove();
 }
+
+/**
+ *
+ * @effects set grand total
+ */
+function setGrandTotal(){
+    let grandTotal = calculateGrandTotal(parseFloat(document.querySelector('.subtotal-js').innerText), extraParams(document.querySelectorAll('.extra-param-row.param-enable')));
+    document.querySelector('.grand-total-js').innerText = grandTotal;
+}
+
+
+// random number generator
+console.log(Math.floor(Math.random() * 10));

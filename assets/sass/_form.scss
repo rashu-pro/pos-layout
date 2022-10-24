@@ -23,6 +23,12 @@ select{
       right:0;
     }
   }
+
+  &-control{
+    &.invalid{
+      border-color:$color-danger;
+    }
+  }
 }
 
 .input{
