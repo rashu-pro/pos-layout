@@ -8,7 +8,7 @@
     <link rel="icon" href="assets/images/favicon_isna.png">
 
     <link rel="stylesheet" href="assets/css/bootstrap-custom.css">
-    <link rel="stylesheet" href="assets/css/style.css?v=1.0.12">
+    <link rel="stylesheet" href="assets/css/style.css?v=1.1.1">
 
 </head>
 <body>
@@ -253,6 +253,7 @@
                                                 <input type="hidden" name="DiscountCode" value="" class="discount-code-name-js">
                                                 <input type="hidden" name="DiscountAmount" value="" class="discount-amount-name-js">
                                                 <input type="hidden" name="DonationAmount" value="" class="donation-amount-name-js">
+                                                <input type="hidden" name="CcreditCardAmount" value="" class="credit-card-amount-name-js">
                                                 <input type="hidden" name="EmailAddress" value="" class="email-address-name-js">
                                             </div>
                                         </div>
@@ -261,8 +262,21 @@
                                 </div>
 
                                 <div class="sidebar-footer-bottom">
-                                    <button type="button" class="btn btn-block btn-info btn-checkout-cash-js mb-10">Cash/Check Payment</button>
-                                    <button type="button" class="btn btn-block btn-success btn-checkout-js">Payment By Card</button>
+                                    <div class="pay-cash-div mb-10 mt-10">
+                                        <a href="javascript:void(0)" class="pay-cash-link pay-cash-js">Cash/Check Payment <img src="assets/images/down_arrow_blue.png"> </a>
+                                        <div class="pay-cash-field-wrapper">
+                                            <div class="input-group p-3">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><span class="currency-sign"><img src="assets/images/dollar-symbol.png"> </span></span>
+                                                </div>
+                                                <input type="number" class="form-control pay-cash-field" name="CashAmount" placeholder="Amount">
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <p class="pay-card-notice pay-card-notice-js text-danger mb-10 mt-10 font-semibold">Pay <strong>$<span class="pay-card-amount-js"></span></strong> via card.</p>
+                                    <button type="button" class="btn btn-block btn-success btn-checkout-js">Checkout</button>
                                 </div>
                             </div>
 
@@ -369,7 +383,7 @@
             <div class="popup-modal-body">
                 <div class="info-card">
                     <p class="mb-10 text-medium font-medium"><span class="font-semibold">Total Item: </span> <span class="total-cart-item cart-counter-js"></span> </p>
-                    <p class="m-0 text-medium font-medium"><span class="font-semibold">Total Price: </span> <span class="currency">$</span><span class="amount grand-total-js">250</span> </p>
+                    <p class="m-0 text-medium font-medium"><span class="font-semibold">Total Price: </span> <span class="currency">$</span><span class="amount pay-card-amount-js"></span> </p>
                 </div>
                 <div class="swipe-image-wrapper text-center">
                     <img src="assets/images/swipe_card.png" class="img-fluid" alt="swipe card">
@@ -452,7 +466,7 @@
                 <div class="info-card mb-0 mt-20">
                     <p><strong>Bill Number: </strong> 45245415 </p>
                     <p><strong>Invoice Number: </strong> 45245415 </p>
-                    <p class="m-0"><strong>Charged Amount: </strong> <span>$</span>520 </p>
+                    <p class="m-0"><strong>Charged Amount: </strong> <span>$</span><span class="grand-total-js"></span> </p>
                 </div>
                 <div class="text-right mt-15">
                     <button type="button" class="btn btn-success btn-close-popup-js" data-action="reload">Done</button>
@@ -491,7 +505,29 @@
 </script>
 
 <!--<script src="assets/js/custom.js?v=1.0.11"></script>-->
-<script src="assets/js/live/custom.js?v=1.0.1"></script>
+<script src="assets/js/live/custom.js?v=1.0.3"></script>
+
+<script>
+    $(document).on('click', '.swipe-image-wrapper', function (e) {
+        let self = $(this);
+        $('#popup-swipe-card').hide();
+        $('.loader-div').addClass('active');
+        let cardNumber = 4111111111111111,
+            expMonth = 4,
+            expYear = 2024,
+            cvc = 123;
+        let chargeAmount = parseFloat($('.pay-card-notice .pay-card-amount-js').text());
+
+        let consoleString = `card number: ${cardNumber}\nExpiry: ${expMonth}/${expYear}\nAmount to charge: ${chargeAmount}`;
+
+        setTimeout(function (e) {
+            alert(consoleString);
+            location.reload();
+//            $('.loader-div').removeClass('active');
+        },400);
+
+    });
+</script>
 
 </body>
 </html>

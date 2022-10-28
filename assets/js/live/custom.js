@@ -77,8 +77,6 @@ $(document).on('click', '.product-single .btn-minus-js', function (e) {
     calculateGrandTotal();
 });
 
-
-
 $(document).on('click', '.product-custom .btn-plus-js', function (e) {
     e.preventDefault();
     let self = $(this);
@@ -90,7 +88,6 @@ $(document).on('click', '.product-custom .btn-minus-js', function (e) {
     let self = $(this);
     quantityIncreaseDecrease(self, 'decrease');
 });
-
 
 $(document).on('click', '.cart-item .btn-plus-js', function (e) {
     e.preventDefault();
@@ -245,9 +242,6 @@ $(document).on('keyup', '.email-address-field', function () {
     $('.email-address-name-js').val(self.val());
 });
 
-
-
-
 function isEmail(status) {
     if (!status) {
         $('.email-address-name-js').val('');
@@ -258,6 +252,31 @@ function isEmail(status) {
     $('.form-group-email').show();
     $('.email-address-field').focus();
 }
+
+//=== ON PAY CASH LINK CLICK
+$(document).on('click', '.pay-cash-js', function (e) {
+    e.preventDefault();
+
+    //=== WHEN CART IS EMPTY
+    if ($('.cart-item-list .cart-item').length < 1) {
+        $('.empty-cart-notice').addClass('focused');
+        setTimeout(function () {
+            $('.empty-cart-notice').removeClass('focused');
+        }, 200);
+        return;
+    }
+
+    let self = $(this);
+    self.toggleClass('active');
+    if(!self.hasClass('active')){
+        self.closest('.pay-cash-div').find('.pay-cash-field').val('');
+    }
+    self.closest('.pay-cash-div').find('.pay-cash-field-wrapper').toggleClass('active');
+    if(self.closest('.pay-cash-div').find('.pay-cash-field-wrapper').hasClass('active')){
+        self.closest('.pay-cash-div').find('.pay-cash-field').focus();
+    }
+
+});
 
 //=== CHECKOUT BUTTON CLICK
 $(document).on('click', '.btn-checkout-js', function (e) {
@@ -279,45 +298,49 @@ $(document).on('click', '.btn-checkout-js', function (e) {
         $('.email-address-field').parent().append('<p class="warning-message text-danger">Invalid email address!</p>');
         return;
     }
-
-
+    let ccTotal = parseFloat($('.pay-card-notice-js .pay-card-amount-js').text());
+    console.log(ccTotal);
+    if(ccTotal==0){
+        $('.popup-modal .grand-total-js').text($('.summary-box .grand-total-js').text());
+        $('#popup-success').show();
+        return;
+    }
     $('#popup-swipe-card').show();
 });
 
-$(document).on('click', '.btn-checkout-cash-js', function (e) {
-    e.preventDefault();
+$(document).on('keyup', '.pay-cash-field', function (e) {
+    let self = $(this),
+        grandTotal = parseFloat($('.summary-box .grand-total-js').text());
 
-    //=== WHEN CART IS EMPTY
-    if ($('.cart-item-list .cart-item').length < 1) {
-        $('.empty-cart-notice').addClass('focused');
-        setTimeout(function () {
-            $('.empty-cart-notice').removeClass('focused');
-        }, 200);
-        return;
+    self.closest('.pay-cash-field-wrapper').find('.warning-message').remove();
+
+    if(parseFloat(self.val())>grandTotal){
+        self.closest('.pay-cash-field-wrapper').append('<p class="text-danger warning-message">Invalid Amount</p>');
+        self.val('');
     }
+    payCardNotice();
 
-    //=== WHEN EMAIL FIELD IS INVALID
-    if($('#is-email').is(':checked') && !$('.email-address-field').hasClass('valid')){
-        $('.email-address-field').focus();
-        $('.email-address-field').parent().find('.warning-message').eq(0).remove();
-        $('.email-address-field').parent().append('<p class="warning-message text-danger">Invalid email address!</p>');
-        return;
-    }
 
-    $('#popup-success').show();
+
 });
+
+function payCardNotice() {
+    $('.pay-card-notice-js').addClass('active');
+
+    let ccTotal = parseFloat($('.summary-box .grand-total-js').text());
+    let payCashAmount = parseFloat($('.pay-cash-field').val());
+    if(payCashAmount>0){
+        ccTotal = parseFloat($('.summary-box .grand-total-js').text()) - payCashAmount;
+        $('#popup-success .grand-total-js').html(ccTotal);
+    }
+    $('.credit-card-amount-name-js').val(ccTotal);
+
+    $('.pay-card-amount-js').text(ccTotal);
+}
 
 //=== POPUP ACTIONS
 $(document).on('click', '.btn-close-popup-js', function (e) {
     e.preventDefault();
-    let self = $(this);
-    if(self.data('action')==='reload'){
-        $('.cart-item-list .cart-item').remove();
-        $('.product-single .item-quantity').val(0);
-        $('.product-single').removeClass('active');
-        calculateTotal();
-        calculateGrandTotal();
-    }
     $(this).closest('.popup-modal-js').hide();
     $('.loader-div').removeClass('active');
 });
@@ -682,7 +705,9 @@ function calculateGrandTotal() {
     if (total < 1) {
         total = 0;
     }
+
     $('.grand-total-js').html(total);
+    $('.pay-card-amount-js').html(total);
     //have to assign value of TotalAmount Field
     $('#txtAmount').val(total);
 }

@@ -1153,6 +1153,31 @@ input[type=number] {
   font-weight: 600;
 }
 
+.pay-cash-link.active img {
+  transform: rotate(180deg);
+}
+.pay-cash-div {
+  padding: 10px;
+  border: 1px solid #2a2d30;
+  border-radius: 4px;
+}
+.pay-cash-div .warning-message {
+  margin-top: 6px;
+}
+.pay-cash-field-wrapper {
+  display: none;
+  padding-top: 10px;
+}
+.pay-cash-field-wrapper.active {
+  display: block;
+}
+.pay-card-notice {
+  display: none;
+}
+.pay-card-notice.active {
+  display: block;
+}
+
 .main-body {
   min-height: 95vh;
 }

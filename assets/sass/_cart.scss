@@ -111,3 +111,41 @@
     font-weight: 600;
   }
 }
+
+.pay{
+  &-cash{
+    &-link{
+      &.active{
+        img{
+          transform:rotate(180deg);
+        }
+      }
+    }
+
+    &-div{
+      padding: 10px;
+      border: 1px solid #2a2d30;
+      border-radius: 4px;
+
+      .warning-message{
+        margin-top:6px;
+      }
+    }
+    &-field{
+      &-wrapper{
+        display: none;
+        padding-top:10px;
+        &.active{
+          display: block;
+        }
+      }
+    }
+  }
+
+  &-card-notice{
+    display: none;
+    &.active{
+      display: block;
+    }
+  }
+}
