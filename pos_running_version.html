@@ -261,7 +261,8 @@
                                 </div>
 
                                 <div class="sidebar-footer-bottom">
-                                    <button type="button" class="btn btn-block btn-success btn-checkout-js">Checkout</button>
+                                    <button type="button" class="btn btn-block btn-info btn-checkout-cash-js mb-10">Cash/Check Payment</button>
+                                    <button type="button" class="btn btn-block btn-success btn-checkout-js">Payment By Card</button>
                                 </div>
                             </div>
 
@@ -438,7 +439,7 @@
         <div class="popup-modal">
             <div class="popup-modal-head">
                 <h2 class="m-0 popup-modal-head-title"></h2>
-                <button type="button" class="btn btn-transparent btn-blank btn-icon btn-close-popup-js">
+                <button type="button" class="btn btn-transparent btn-blank btn-icon btn-close-popup-js" data-action="reload">
                     <img src="assets/images/close_white.png" alt="close">
                 </button>
             </div>
@@ -452,6 +453,9 @@
                     <p><strong>Bill Number: </strong> 45245415 </p>
                     <p><strong>Invoice Number: </strong> 45245415 </p>
                     <p class="m-0"><strong>Charged Amount: </strong> <span>$</span>520 </p>
+                </div>
+                <div class="text-right mt-15">
+                    <button type="button" class="btn btn-success btn-close-popup-js" data-action="reload">Done</button>
                 </div>
             </div>
 
@@ -487,7 +491,7 @@
 </script>
 
 <!--<script src="assets/js/custom.js?v=1.0.11"></script>-->
-<script src="assets/js/live/custom.js?v=1.0.0"></script>
+<script src="assets/js/live/custom.js?v=1.0.1"></script>
 
 </body>
 </html>
